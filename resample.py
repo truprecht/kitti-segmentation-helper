@@ -2,7 +2,7 @@ import h5py as hdf
 import numpy as np
 from sys import argv
 from scipy.misc import imresize
-from os import listdir, mkdirs
+from os import listdir, makedirs
 
 import struct
 
@@ -17,7 +17,7 @@ if __name__ == "__main__":
     if outputdir[-1] != "/": outputdir += "/"
     if inputdir[-1] != "/": inputdir += "/"
     try:
-        mkdirs(outputdir[:-1])
+        makedirs(outputdir[:-1])
     except Exception, _:
         pass
 

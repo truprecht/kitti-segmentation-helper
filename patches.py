@@ -2,7 +2,7 @@
 import cv2
 import numpy as np
 from sys import argv
-from os import getcwd, mkdirs
+from os import getcwd, makedirs
 
 WD = getcwd() + "/"
 
@@ -15,16 +15,16 @@ if __name__ == "__main__":
     outputdir = argv[5]
     idprefix = argv[6]
     if outputdir[-1] != "/": outputdir += "/"
-    roidir = outputdir + "roi"
+    roidir = outputdir + "roi/"
     try:
-        mkdirs(outputdir[:-1])
-        mkdirs(roidir)
+        makedirs(outputdir[:-1])
+        makedirs(roidir[:-1])
     except Exception, _:
         pass
     
 
     img = cv2.imread(imagefile)
-    assert img is not None, "Image could not be read"
+    assert img is not None, "Image [%s] could not be read" %(imagefile)
 
     test_formatted = ""
     test_id = ""

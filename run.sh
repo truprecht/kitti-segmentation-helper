@@ -1,45 +1,46 @@
 #!/bin/bash
 # execute in project root, expect subfolders ./cnn, ./densecrf
+set -e
 
-IMAGE = "..."
-SWIDTH = 50
-SHEIGHT = 50
-MWIDTH = 75
-MHEIGHT = 75
-LWIDTH = 100
-LHEIGHT = 100
-STRIDE = 20
+IMAGE=$1
+SWIDTH=50
+SHEIGHT=50
+MWIDTH=75
+MHEIGHT=75
+LWIDTH=100
+LHEIGHT=100
+STRIDE=20
 
 # cut image patches
-rm -r data && echo "clearing data folder"
-mkdir data && mkdir data/small && mkdir data/medium && mkdir data/large
+rm -r data &> /dev/null || echo "data folder does not exist"
+mkdir data
 cd cnn
-python2 ../patches.py $IMAGE $SWIDTH $SHEIGHT $STRIDE ../data/small s
-python2 ../patches.py $IMAGE $MWIDTH $MHEIGHT $STRIDE ../data/medium m
-python2 ../patches.py $IMAGE $LWIDTH $LHEIGHT $STRIDE ../data/large l
+python2 ../patches.py ../$IMAGE $SWIDTH $SHEIGHT $STRIDE ../data/small s
+python2 ../patches.py ../$IMAGE $MWIDTH $MHEIGHT $STRIDE ../data/medium m
+python2 ../patches.py ../$IMAGE $LWIDTH $LHEIGHT $STRIDE ../data/large l
 
 # run cnn test on different patch sizes seperately, move 'em to data folder
 for size in small medium large
 do
-    (rm test_list.txt; rm test_list_id_only.txt) && echo "clearing test list"
+    (rm test_list.txt &> /dev/null; rm test_list_id_only.txt &> /dev/null)  || echo "id lists do not exist"
     cp ../data/$size/*.txt ./
 
-    rm -r fc8_blahblah && echo "clearing output folder"
-    mkdir fc8_blahblah
+    rm -r fc8_val3769 &> /dev/null || echo "output folder does not exist"
+    mkdir fc8_val3769
     bash run_test.sh
-    mv fc8_blahblah ../data/$size/res
-end
+    mv fc8_val3769 ../data/$size/res
+done
 
 cd ..
 # resample classifications to original patch size, move w/ roi files to densecrf
-rm -r densecrf/data/input && echo "clearing densecrf input folder"
+rm -r densecrf/data/input &> /dev/null  || echo "densecrf input folder does not exist"
 mkdir densecrf/data/input
 python2 resample.py data/small/res $SWIDTH $SHEIGHT data/results
 python2 resample.py data/medium/res $MWIDTH $MHEIGHT data/results
 python2 resample.py data/large/res $LWIDTH $LHEIGHT data/results
 
 # move roi files to densecrf
-rm -r densecrf/data/roi && echo "clearing roi files"
+rm -r densecrf/data/roi &> /dev/null  || echo "roi folder does not exist"
 mkdir densecrf/data/roi
 mv data/small/roi/* densecrf/data/roi/
 mv data/medium/roi/* densecrf/data/roi/
