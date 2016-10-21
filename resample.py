@@ -21,6 +21,8 @@ if __name__ == "__main__":
     except Exception, _:
         pass
 
+    filelist = ""
+
     for file in listdir(inputdir):
         filepath = inputdir + file
         print "processing file %s" %(file)
@@ -36,14 +38,20 @@ if __name__ == "__main__":
                 for c in range(0, cs):
                     for y in range(0, nheight):
                         for x in range(0, nwidth):
-                            nmat[i,c,y,x] = mat[i,c, int( (y+.5) * float(oheight)/nheight ), int( (x+.5) * float(owidth)/nwidth )]
+                            nmat[i,c,y,x] = mat[int( (y+.5) * float(oheight)/nheight ), int( (x+.5) * float(owidth)/nwidth ), c, i]
 
             # dump float binaries
-            bin = open(outputdir + file.replace(".mat", ".dat"), "wb")
-            mat = mat.flatten()
-            s = struct.pack('f'*len(mat), *mat)
+            ofile = file.replace(".mat", ".dat")
+            filelist += ofile + "\n"
+            bin = open(outputdir + ofile, "wb")
+            nmat = nmat.flatten()
+            s = struct.pack('f'*len(nmat), *nmat)
             bin.write(s)
             bin.close()
         except Exception, e:
             print "... skipping b/c %s" %(str(e))
+    
+    with file as open(outputdir + "filelist.txt", "a"):
+        file.write(filelist)
+    
     print "done"

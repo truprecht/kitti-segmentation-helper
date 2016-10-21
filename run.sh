@@ -38,9 +38,10 @@ cd ..
 # resample classifications to original patch size, move w/ roi files to densecrf
 rm -r densecrf/data/input &> /dev/null  || echo "densecrf input folder does not exist"
 mkdir densecrf/data/input
-python2 resample.py data/small/res $SWIDTH $SHEIGHT data/results
-python2 resample.py data/medium/res $MWIDTH $MHEIGHT data/results
-python2 resample.py data/large/res $LWIDTH $LHEIGHT data/results
+touch densecrf/data/input/filelist.txt
+python2 resample.py data/small/res $SWIDTH $SHEIGHT densecrf/data/input
+python2 resample.py data/medium/res $MWIDTH $MHEIGHT densecrf/data/input
+python2 resample.py data/large/res $LWIDTH $LHEIGHT densecrf/data/input
 
 # move roi files to densecrf
 rm -r densecrf/data/roi &> /dev/null  || echo "roi folder does not exist"
@@ -50,3 +51,5 @@ mv data/medium/roi/* densecrf/data/roi/
 mv data/large/roi/* densecrf/data/roi/
 
 # TODO: run inference
+cd densecrf
+bash RunInference.bash
