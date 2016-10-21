@@ -51,7 +51,7 @@ if __name__ == "__main__":
         except Exception, e:
             print "... skipping b/c %s" %(str(e))
     
-    with file as open(outputdir + "filelist.txt", "a"):
+    with open(outputdir + "filelist.txt", "a") as file:
         file.write(filelist)
     
     print "done"
