@@ -22,12 +22,15 @@ python2 ../patches.py ../$IMAGE $LWIDTH $LHEIGHT $STRIDE ../data/large l
 # run cnn test on different patch sizes seperately, move 'em to data folder
 for size in small medium large
 do
+    rm -r fc8_val3769 &> /dev/null || echo "output folder does not exist"
+    mkdir fc8_val3769
+    
     (rm test_list.txt &> /dev/null; rm test_list_id_only.txt &> /dev/null)  || echo "id lists do not exist"
     cp ../data/$size/*.txt ./
 
-    rm -r fc8_val3769 &> /dev/null || echo "output folder does not exist"
-    mkdir fc8_val3769
-    bash run_test.sh
+    iterations=$(wc -w test_list_id_only.txt  | grep -o "^[0-9]\+")
+    bash run_test.sh $iterations
+    
     mv fc8_val3769 ../data/$size/res
 done
 
