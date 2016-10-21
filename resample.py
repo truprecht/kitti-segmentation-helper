@@ -1,8 +1,8 @@
-import h5py as hdf
 import numpy as np
 from sys import argv
 from scipy.misc import imresize
 from os import listdir, makedirs
+from scipy.io import loadmat
 
 import struct
 
@@ -26,9 +26,10 @@ if __name__ == "__main__":
         print "processing file %s" %(file)
         try:
             assert file.endswith(".mat"), "Filename should end with .mat"
-            mat = np.array(hdf.File(filepath)["data"])
+            mat = loadmat(filepath)["data"]
 
-            iss, cs, oheight, owidth = mat.shape
+            #iss, cs, oheight, owidth = mat.shape
+            oheight, owidth, cs, i = mat.shape
             # resample
             nmat = np.zeros((iss, cs, nheight, nwidth))
             for i in range(0, iss):
@@ -37,7 +38,7 @@ if __name__ == "__main__":
                         for x in range(0, nwidth):
                             nmat[i,c,y,x] = mat[i,c, int( (y+.5) * float(oheight)/nheight ), int( (x+.5) * float(owidth)/nwidth )]
 
-            # TODO dump float binaries
+            # dump float binaries
             bin = open(outputdir + file.replace(".mat", ".dat"), "wb")
             mat = mat.flatten()
             s = struct.pack('f'*len(mat), *mat)
