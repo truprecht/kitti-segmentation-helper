@@ -31,7 +31,7 @@ if __name__ == "__main__":
             mat = loadmat(filepath)["data"]
 
             #iss, cs, oheight, owidth = mat.shape
-            oheight, owidth, cs, i = mat.shape
+            oheight, owidth, cs, iss = mat.shape
             # resample
             nmat = np.zeros((iss, cs, nheight, nwidth))
             for i in range(0, iss):
