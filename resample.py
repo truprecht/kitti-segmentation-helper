@@ -41,7 +41,7 @@ if __name__ == "__main__":
                             nmat[i,c,y,x] = mat[int( (y+.5) * float(oheight)/nheight ), int( (x+.5) * float(owidth)/nwidth ), c, i]
 
             # dump float binaries
-            ofile = file.replace(".mat", ".dat")
+            ofile = file.replace("_blob_0.mat", ".dat")
             filelist += ofile + "\n"
             bin = open(outputdir + ofile, "wb")
             nmat = nmat.flatten()
