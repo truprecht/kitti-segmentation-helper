@@ -3,21 +3,26 @@
 set -e
 
 IMAGE=$1
-SWIDTH=50
-SHEIGHT=50
-MWIDTH=75
-MHEIGHT=75
-LWIDTH=100
-LHEIGHT=100
-STRIDE=20
+
+SWIDTH=192
+SHEIGHT=120
+SSTRIDE=32
+
+MWIDTH=288
+MHEIGHT=180
+MSTRIDE=48
+
+LWIDTH=432
+LHEIGHT=270
+LSTRIDE=72
 
 # cut image patches
 rm -r data &> /dev/null || echo "data folder does not exist"
 mkdir data
 cd cnn
-python2 ../patches.py ../$IMAGE $SWIDTH $SHEIGHT $STRIDE ../data/small s
-python2 ../patches.py ../$IMAGE $MWIDTH $MHEIGHT $STRIDE ../data/medium m
-python2 ../patches.py ../$IMAGE $LWIDTH $LHEIGHT $STRIDE ../data/large l
+python2 ../patches.py ../$IMAGE $SWIDTH $SHEIGHT $SSTRIDE $LHEIGHT ../data/small "_3"
+python2 ../patches.py ../$IMAGE $MWIDTH $MHEIGHT $MSTRIDE $LHEIGHT ../data/medium "_2"
+python2 ../patches.py ../$IMAGE $LWIDTH $LHEIGHT $LSTRIDE $LHEIGHT ../data/large "_1"
 
 # run cnn test on different patch sizes seperately, move 'em to data folder
 for size in small medium large
