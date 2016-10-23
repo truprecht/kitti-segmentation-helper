@@ -1,8 +1,8 @@
 import numpy as np
 from sys import argv
-from scipy.misc import imresize
 from os import listdir, makedirs
 from scipy.io import loadmat
+import cv2
 
 import struct
 
@@ -39,6 +39,7 @@ if __name__ == "__main__":
                     for y in range(0, nheight):
                         for x in range(0, nwidth):
                             nmat[i,c,y,x] = mat[int( (y+.5) * float(oheight)/nheight ), int( (x+.5) * float(owidth)/nwidth ), c, i]
+                    nmat[i,c] = cv2.GaussianBlur(nmat[i,c], (5,5), 0)
 
             # dump float binaries
             ofile = file.replace("_blob_0.mat", ".dat")
