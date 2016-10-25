@@ -33,13 +33,13 @@ if __name__ == "__main__":
             #iss, cs, oheight, owidth = mat.shape
             oheight, owidth, cs, iss = mat.shape
             # resample
-            nmat = np.zeros((iss, cs, nheight, nwidth))
+            nmat = np.zeros((iss, cs, nwidth, nheight))
             for i in range(0, iss):
                 for c in range(0, cs):
                     for y in range(0, nheight):
                         for x in range(0, nwidth):
-                            nmat[i,c,y,x] = mat[int( (y+.5) * float(oheight)/nheight ), int( (x+.5) * float(owidth)/nwidth ), c, i]
-                    nmat[i,c] = cv2.GaussianBlur(nmat[i,c], (5,5), 0)
+                            nmat[i,c,x,y] = mat[int( (y+.5) * float(oheight)/nheight ), int( (x+.5) * float(owidth)/nwidth ), c, i]
+                    nmat[i,c] = cv2.GaussianBlur(nmat[i,c], (3,3), 0)
 
             # dump float binaries
             ofile = file.replace("_blob_0.mat", ".dat")
