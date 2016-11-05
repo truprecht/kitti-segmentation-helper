@@ -34,13 +34,13 @@ do
     cp ../data/$size/*.txt ./
 
     iterations=$(wc -w test_list_id_only.txt  | grep -o "^[0-9]\+")
-    bash run_test.sh $iterations
-    
+    caffe test -model=test.prototxt -weights=deeplab-kitti-60k.caffemodel -iterations $iterations
+
     mv fc8_val3769 ../data/$size/res
 done
 
 cd ..
-# resample classifications to original patch size, move w/ roi files to densecrf
+# resample classifications to original patch size, move w/ to densecrf
 rm -r densecrf/data/input &> /dev/null  || echo "densecrf input folder does not exist"
 mkdir densecrf/data/input
 touch densecrf/data/input/filelist.txt
@@ -55,6 +55,9 @@ mv data/small/roi/* densecrf/data/roi/
 mv data/medium/roi/* densecrf/data/roi/
 mv data/large/roi/* densecrf/data/roi/
 
-# TODO: run inference
+# move image to densecrf
+cp $IMAGE densecrf/data/image/
+
+# run inference
 cd densecrf
 bash RunInference.bash

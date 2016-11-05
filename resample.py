@@ -9,7 +9,6 @@ import struct
 if __name__ == "__main__":
     assert len(argv) == 5, "use " + argv[0] + " <input folder> <new width> <new height> <output folder>"
 
-    #mat = np.array(hdf.File(argv[1])["data"])
     inputdir = argv[1]
     nwidth = int(argv[2])
     nheight = int(argv[3])
@@ -23,6 +22,7 @@ if __name__ == "__main__":
 
     filelist = ""
 
+    # resample all files in input dir, convert result to float binary and store in output dir
     for file in listdir(inputdir):
         filepath = inputdir + file
         print "processing file %s" %(file)
@@ -39,16 +39,18 @@ if __name__ == "__main__":
                     for y in range(0, nheight):
                         for x in range(0, nwidth):
                             nmat[i,c,x,y] = mat[int( (y+.5) * float(oheight)/nheight ), int( (x+.5) * float(owidth)/nwidth ), c, i]
-                    nmat[i,c] = cv2.GaussianBlur(nmat[i,c], (3,3), 0)
+                    # gaussian filtering ?
+                    # nmat[i,c] = cv2.GaussianBlur(nmat[i,c], (3,3), 0)
 
             # dump float binaries
             ofile = file.replace("_blob_0.mat", ".dat")
             filelist += ofile + "\n"
-            bin = open(outputdir + ofile, "wb")
-            nmat = nmat.flatten()
-            s = struct.pack('f'*len(nmat), *nmat)
-            bin.write(s)
-            bin.close()
+
+            with open(outputdir + ofile, "wb") as bin:
+                nmat = nmat.flatten()
+                s = struct.pack('f'*len(nmat), *nmat)
+                bin.write(s)
+
         except Exception, e:
             print "... skipping b/c %s" %(str(e))
     

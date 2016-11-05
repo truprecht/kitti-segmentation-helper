@@ -35,17 +35,18 @@ if __name__ == "__main__":
     
     iheight, iwidth, _ = img.shape
     
-    # fix y for last row only
+    # fix y for last row only w/ offset
     ### for y in range(0, iheight - pheight, stride):
     y = iheight - y_off
 
     xrange = range(0, iwidth - pwidth, stride)
+    # force rightmost patch
     last = iwidth - pwidth 
     xrange += [last] if not last in xrange else []  
     
     for x in xrange:
         id += 1
-        #strid = idprefix + "{:06d}".format(id)
+        # generate patch id w/ autoincrement postfix
         strid = imgfilename + postfix + "_{:02d}".format(id)
 
         cv2.imwrite(outputdir + strid + ".png", img[y:y+pheight, x:x+pwidth])
