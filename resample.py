@@ -30,26 +30,18 @@ if __name__ == "__main__":
             assert file.endswith(".mat"), "Filename should end with .mat"
             mat = loadmat(filepath)["data"]
 
-            #iss, cs, oheight, owidth = mat.shape
-            oheight, owidth, cs, iss = mat.shape
-            # resample
-            nmat = np.zeros((iss, cs, nwidth, nheight))
-            for i in range(0, iss):
-                for c in range(0, cs):
-                    for y in range(0, nheight):
-                        for x in range(0, nwidth):
-                            nmat[i,c,x,y] = mat[int( (y+.5) * float(oheight)/nheight ), int( (x+.5) * float(owidth)/nwidth ), c, i]
-                    # gaussian filtering ?
-                    # nmat[i,c] = cv2.GaussianBlur(nmat[i,c], (3,3), 0)
-
-            # dump float binaries
             ofile = file.replace("_blob_0.mat", ".dat")
             filelist += ofile + "\n"
 
+            oheight, owidth, cs, iss = mat.shape
+            
+            # resample and output
             with open(outputdir + ofile, "wb") as bin:
-                nmat = nmat.flatten()
-                s = struct.pack('f'*len(nmat), *nmat)
-                bin.write(s)
+                for i in range(0, iss):
+                    for channel in range(0, cs):
+                        for row in range(0, nheight):
+                            for col in range(0, nwidth):
+                                bin.write(struct.pack('f', mat[int( (row + .5) * float(oheight)/nheight ), int( (col + .5) * float(owidth)/nwidth ), channel, i]))
 
         except Exception, e:
             print "... skipping b/c %s" %(str(e))
