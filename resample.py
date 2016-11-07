@@ -34,14 +34,14 @@ if __name__ == "__main__":
             filelist += ofile + "\n"
 
             oheight, owidth, cs, iss = mat.shape
-            
-            # resample and output
+            omat = cv2.resize(mat[:,:,:, 0], (nwidth, nheight))
+
+            # output
             with open(outputdir + ofile, "wb") as bin:
-                for i in range(0, iss):
-                    for channel in range(0, cs):
+                for channel in range(0, cs):
+                    for col in range(0, nwidth):
                         for row in range(0, nheight):
-                            for col in range(0, nwidth):
-                                bin.write(struct.pack('f', mat[int( (row + .5) * float(oheight)/nheight ), int( (col + .5) * float(owidth)/nwidth ), channel, i]))
+                            bin.write(struct.pack('f', omat[row, col, channel]))
 
         except Exception, e:
             print "... skipping b/c %s" %(str(e))
