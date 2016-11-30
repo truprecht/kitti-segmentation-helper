@@ -2,6 +2,7 @@ import numpy as np
 from sys import argv
 from os import listdir, makedirs
 from scipy.io import loadmat
+from h5py import File
 import cv2
 
 import struct
@@ -28,12 +29,21 @@ if __name__ == "__main__":
         print "processing file %s" %(file)
         try:
             assert file.endswith(".mat"), "Filename should end with .mat"
-            mat = loadmat(filepath)["data"]
+            try:
+                # (41,      41,     6)
+                # (height,  width,  channels)
+                mat = loadmat(filepath)["data"][:, :, :, 0]
+            except Exception, e: 
+                # sometimes caffe decides to return matlab 7.3 matrices...
+                # (6,           41,     41)
+                # (channels,    width,  height)
+                mat = File(filepath)["data"][0]
+                mat = np.swapaxes(mat, 0, 2)
+                
+            omat = cv2.resize(mat, (nheight, nwidth))
 
             ofile = file.replace("_blob_0.mat", ".dat")
             filelist += ofile + "\n"
-
-            omat = cv2.resize(mat[:,:,:, 0], (nheight, nwidth))
 
             # output
             with open(outputdir + ofile, "wb") as bin:
