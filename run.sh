@@ -77,4 +77,33 @@ cp $IMAGE densecrf/data/image/ || echo "image already exists"
 
 # run inference
 cd densecrf
-bash RunInference.bash
+mkdir Results || echo "results folder already exists"
+rm -r Results/* || echo "results folder is empty"
+
+# RunInference.bash
+ROOT="~/cnn-densecrf-kitti-public/densecrf"
+
+PATCH_FILE=${ROOT}/data/input/filelist.txt
+RESULT_PATH=${ROOT}/Results/
+
+wl=1 # weight for local CNN prediction term (large patches)
+wm=1.7 # weight for local CNN prediction term (medium patches)
+ws=1.7 # weight for local CNN prediction term (small patches)
+sp=0.1 # stddev in the kernel
+
+wi=12 # weight for inter-connected component term
+df=0.6 # threshold for obtaining foreground map
+
+wlocc=1.7 # weight for smoothness term
+slocl=80 # spatial stddev
+slocpr=0.2 # CNN prediction stddev
+
+iters=15 # iterations of mean field to run
+
+#OUTPUT_FOLDER=${RESULT_PATH}Results_wl${wl}_wm${wm}_ws${ws}_sp${sp}_wi${wi}_df${df}_wlocc${wlocc}_slocl${slocl}_slocpr${slocpr}_iters${iters}/
+#mkdir ${OUTPUT_FOLDER}
+OUTPUT_FOLDER=$RESULT_PATH
+
+mpiexec -n 12 ./build/inference/inference -p ${PATCH_FILE} -ws ${ws} -wm ${wm} -wl ${wl} -wi ${wi} -sp ${sp} -df ${df} -wc ${wc} -wp ${wp} -sps ${sps} -wcol ${wcol} -wlocc ${wlocc} -wlocp ${wlocp} -slocl ${slocl} -slocpr ${slocpr} -iters ${iters} -o ${OUTPUT_FOLDER}
+
+#./build/inference/inference -p ${PATCH_FILE} -ws ${ws} -wm ${wm} -wl ${wl} -wi ${wi} -sp ${sp} -df ${df} -wc ${wc} -wp ${wp} -sps ${sps} -wcol ${wcol} -wlocc ${wlocc} -wlocp ${wlocp} -slocl ${slocl} -slocpr ${slocpr} -iters ${iters} -o ${OUTPUT_FOLDER}
