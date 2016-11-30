@@ -33,15 +33,11 @@ if __name__ == "__main__":
             ofile = file.replace("_blob_0.mat", ".dat")
             filelist += ofile + "\n"
 
-            oheight, owidth, cs, iss = mat.shape
-            omat = cv2.resize(mat[:,:,:, 0], (nwidth, nheight))
+            omat = cv2.resize(mat[:,:,:, 0], (nheight, nwidth))
 
             # output
             with open(outputdir + ofile, "wb") as bin:
-                for channel in range(0, cs):
-                    for col in range(0, nwidth):
-                        for row in range(0, nheight):
-                            bin.write(struct.pack('f', omat[row, col, channel]))
+                omat.flatten(order = "F").tofile(bin)
 
         except Exception, e:
             print "... skipping b/c %s" %(str(e))
