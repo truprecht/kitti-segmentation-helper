@@ -73,7 +73,7 @@ mv data/medium/roi/* densecrf/data/roi/
 mv data/large/roi/* densecrf/data/roi/
 
 # move image to densecrf
-cp $IMAGE densecrf/data/image/
+cp $IMAGE densecrf/data/image/ || echo "image already exists"
 
 # run inference
 cd densecrf
