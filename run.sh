@@ -1,6 +1,5 @@
 #!/bin/bash
 # execute in project root, expect subfolders ./cnn, ./densecrf
-set -e
 
 if [ -z $1 ]
 then
@@ -100,10 +99,8 @@ slocpr=0.2 # CNN prediction stddev
 
 iters=15 # iterations of mean field to run
 
-#OUTPUT_FOLDER=${RESULT_PATH}Results_wl${wl}_wm${wm}_ws${ws}_sp${sp}_wi${wi}_df${df}_wlocc${wlocc}_slocl${slocl}_slocpr${slocpr}_iters${iters}/
-#mkdir ${OUTPUT_FOLDER}
-OUTPUT_FOLDER=$RESULT_PATH
+OUTPUT_FOLDER=${RESULT_PATH}Results_wl${wl}_wm${wm}_ws${ws}_sp${sp}_wi${wi}_df${df}_wlocc${wlocc}_slocl${slocl}_slocpr${slocpr}_iters${iters}/
+mkdir ${OUTPUT_FOLDER}
+#OUTPUT_FOLDER=$RESULT_PATH/
 
-mpiexec -n 12 inference -p ${PATCH_FILE} -ws ${ws} -wm ${wm} -wl ${wl} -wi ${wi} -sp ${sp} -df ${df} -wc ${wc} -wp ${wp} -sps ${sps} -wcol ${wcol} -wlocc ${wlocc} -wlocp ${wlocp} -slocl ${slocl} -slocpr ${slocpr} -iters ${iters} -o ${OUTPUT_FOLDER}
-
-#./build/inference/inference -p ${PATCH_FILE} -ws ${ws} -wm ${wm} -wl ${wl} -wi ${wi} -sp ${sp} -df ${df} -wc ${wc} -wp ${wp} -sps ${sps} -wcol ${wcol} -wlocc ${wlocc} -wlocp ${wlocp} -slocl ${slocl} -slocpr ${slocpr} -iters ${iters} -o ${OUTPUT_FOLDER}
+inference -p ${PATCH_FILE} -ws ${ws} -wm ${wm} -wl ${wl} -wi ${wi} -sp ${sp} -df ${df} -wc ${wc} -wp ${wp} -sps ${sps} -wcol ${wcol} -wlocc ${wlocc} -wlocp ${wlocp} -slocl ${slocl} -slocpr ${slocpr} -iters ${iters} -o ${OUTPUT_FOLDER}
