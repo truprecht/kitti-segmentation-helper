@@ -80,10 +80,11 @@ mkdir Results || echo "results folder already exists"
 rm -r Results/* || echo "results folder is empty"
 
 # RunInference.bash
-ROOT="~/cnn-densecrf-kitti-public/densecrf"
+#ROOT="~/cnn-densecrf-kitti-public/densecrf"
 
-PATCH_FILE=${ROOT}/data/input/filelist.txt
-RESULT_PATH=${ROOT}/Results/
+ROOT="/home/s4328151/cnn-densecrf-kitti-public/densecrf"
+PATCH_FILE="${ROOT}/data/input/filelist.txt"
+RESULT_PATH="${ROOT}/Results"
 
 wl=1 # weight for local CNN prediction term (large patches)
 wm=1.7 # weight for local CNN prediction term (medium patches)
@@ -99,7 +100,7 @@ slocpr=0.2 # CNN prediction stddev
 
 iters=15 # iterations of mean field to run
 
-OUTPUT_FOLDER=${RESULT_PATH}Results_wl${wl}_wm${wm}_ws${ws}_sp${sp}_wi${wi}_df${df}_wlocc${wlocc}_slocl${slocl}_slocpr${slocpr}_iters${iters}/
+OUTPUT_FOLDER="${RESULT_PATH}/Results_wl${wl}_wm${wm}_ws${ws}_sp${sp}_wi${wi}_df${df}_wlocc${wlocc}_slocl${slocl}_slocpr${slocpr}_iters${iters}/"
 mkdir ${OUTPUT_FOLDER}
 #OUTPUT_FOLDER=$RESULT_PATH/
 
