@@ -8,9 +8,11 @@ from re import search
 WD = getcwd() + "/"
 
 if __name__ == "__main__":
-    assert len(argv) == 8, "Use " + argv[0] + " <img> <patch width> <patch height> <stride (x)> <y offset> <output dir> <name postfix>"
+    assert len(argv) == 8 or len(argv) == 9, "Use " + argv[0] + " <img> <patch width> <patch height> <stride (x)> <y offset> <output dir> <name postfix>"
+    
     imagefile = argv[1]
     imgfilename = search("([^\./]+)\.\w+$", imagefile).group(1)
+    
     pwidth = int(argv[2])
     pheight = int(argv[3])
     stride = int(argv[4])
@@ -24,7 +26,6 @@ if __name__ == "__main__":
         makedirs(roidir[:-1])
     except Exception, _:
         pass
-    
 
     img = cv2.imread(imagefile)
     assert img is not None, "Image [%s] could not be read" %(imagefile)
