@@ -18,13 +18,15 @@ def save_patches(patchlist, output_folder, basename, name_postfix="_"):
         save a list of patch tuples using autoincrement names
     """
     autoinc = 1
-    for (patch, label) in patchlist:
+    for (patch, label, roi) in patchlist:
         patchfilename = "{basename}{postfix}_{uid:02d}.png".format( \
             basename=basename \
             , uid=autoinc \
             , postfix=name_postfix \
             )
         imwrite(output_folder + patchfilename, patch)
+        with open(output_folder + patchfilename.replace(".png", ".txt"), "w") as roifile:
+            roifile.write(" ".join(roi))
         if label is not None:
             labelfilename = "{basename}{postfix}_{uid:02d}_annot.png".format( \
                 basename=basename \
@@ -57,6 +59,7 @@ def crop(image, pwidth, pheight, stride, y_off, label_image=None):
     patch_tuples = []
 
     for current_x in range_x:
+        roi = (fixed_y+1, y+pheight, current_x+1, current_x+pwidth)
         patch = np.array(image[fixed_y:fixed_y+pheight, current_x:current_x+pwidth])
         labels = None
         if label_image is not None:
@@ -68,7 +71,7 @@ def crop(image, pwidth, pheight, stride, y_off, label_image=None):
                 np.place(labels, labels == label, [i])
                 i += 1
 
-        patch_tuples.append((patch, labels))
+        patch_tuples.append((patch, labels, roi))
 
     return patch_tuples
 

@@ -1,13 +1,30 @@
 #!/bin/bash
-# execute in project root, expect subfolders ./cnn, ./densecrf
 
-if [ -z $1 ]
+if [ -z $1 ] || [ -z $2 ]
 then
-    echo "use $0 <image file>"
+    echo "use $0 <project root> <image file>"
     exit 1
 fi
 
-IMAGE=$1
+# SETUP
+ROOT=$1
+if [ "${ROOT: -1}" != "/" ]
+then
+    ROOT="${ROOT}/"
+fi
+IMAGE=$2
+DATA="${ROOT}data/"
+
+CNNOUT="${ROOT}cnn/fc8_val3769/"
+PROTOTXT="${ROOT}cnn/test.prototxt"
+CAFFEMOD="${ROOT}cnn/deeplab-kitti-60k.caffemodel"
+PATCHLIST="${ROOT}test_list.txt"
+PATCHLISTID="${ROOT}test_list_id_only.txt"
+
+CRFINPUT="${ROOT}densecrf/data/input/"
+CRFROI="${ROOT}densecrf/data/roi/"
+CRFIMAGE="${ROOT}densecrf/data/image/"
+CRFRESULTS="${ROOT}densecrf/data/results/"
 
 SWIDTH=192
 SHEIGHT=120
@@ -27,64 +44,61 @@ LSTRIDE=72
 # st. output name := basename + postfix + autoincrement + file postfix, 
 # if input name = basename + file postfix
 #
-rm -r data &> /dev/null || echo "data folder does not exist"
-mkdir data
-cd cnn
-python2 ../patches.py ../$IMAGE $SWIDTH $SHEIGHT $SSTRIDE $LHEIGHT ../data/small "_3"
-python2 ../patches.py ../$IMAGE $MWIDTH $MHEIGHT $MSTRIDE $LHEIGHT ../data/medium "_2"
-python2 ../patches.py ../$IMAGE $LWIDTH $LHEIGHT $LSTRIDE $LHEIGHT ../data/large "_1"
+rm -r $DATA &> /dev/null || echo "data folder does not exist"
+mkdir $DATA
+(rm $PATCHLIST &> /dev/null; rm $PATCHLISTID &> /dev/null)  || echo "id lists do not exist"
+touch $PATCHLIST
+#cd cnn
+python2 ${ROOT}patchesv2.py $IMAGE $SWIDTH $SHEIGHT $SSTRIDE $LHEIGHT ${DATA}small "_3" >> ${PATCHLIST}_small
+python2 ${ROOT}patchesv2.py $IMAGE $MWIDTH $MHEIGHT $MSTRIDE $LHEIGHT ${DATA}medium "_2" >> ${PATCHLIST}_medium
+python2 ${ROOT}patchesv2.py $IMAGE $LWIDTH $LHEIGHT $LSTRIDE $LHEIGHT ${DATA}large "_1" >> ${PATCHLIST}_large
 
 # run cnn test on different patch sizes seperately, move 'em to data folder
 for size in small medium large
 do
-    rm -r fc8_val3769 &> /dev/null || echo "output folder does not exist"
-    mkdir fc8_val3769
-    
-    (rm test_list.txt &> /dev/null; rm test_list_id_only.txt &> /dev/null)  || echo "id lists do not exist"
-    cp ../data/$size/*.txt ./
+    rm -r $CNNOUT &> /dev/null || echo "output folder does not exist"
+    mkdir $CNNOUT
 
+    cp ${PATCHLIST}_${size} $PATCHLIST
+    python ${ROOT}idonly.py $PATCHLIST > $PATCHLISTID
     # count files listed in test_list_id_only.txt
-    iterations=$(wc -w test_list_id_only.txt  | grep -o "^[0-9]\+")
-    caffe test -model=test.prototxt -weights=deeplab-kitti-60k.caffemodel -iterations $iterations -gpu 0
+    iterations=$(wc -w $PATCHLISTID  | grep -o "^[0-9]\+")
+    caffe test -model=$PROTOTXT -weights=$CAFFEMOD -iterations $iterations -gpu 0
 
-    mv fc8_val3769 ../data/$size/res
+    mv $CNNOUT ${DATA}$size/res
 done
 
-cd ..
+#cd ..
 #
 # resample classifications to original patch size, move w/ to densecrf
 # call resample.py <input dir> <resampled width> <resampled height> <output dir>
 # only resamples *.mat files, 
 # output name := basename + .dat, if input name = basename + _blob_0.mat 
 #
-rm -r densecrf/data/input &> /dev/null  || echo "densecrf input folder does not exist"
-mkdir densecrf/data/input
-touch densecrf/data/input/filelist.txt
-python2 resample.py data/small/res $SWIDTH $SHEIGHT densecrf/data/input
-python2 resample.py data/medium/res $MWIDTH $MHEIGHT densecrf/data/input
-python2 resample.py data/large/res $LWIDTH $LHEIGHT densecrf/data/input
+rm -r $CRFINPUT &> /dev/null  || echo "densecrf input folder does not exist"
+mkdir $CRFINPUT
+touch ${CRFINPUT}filelist.txt
+python2 resample.py ${DATA}/small/res $SWIDTH $SHEIGHT $CRFINPUT
+python2 resample.py ${DATA}/medium/res $MWIDTH $MHEIGHT $CRFINPUT
+python2 resample.py ${DATA}/large/res $LWIDTH $LHEIGHT $CRFINPUT
 
 # move roi files to densecrf
-rm -r densecrf/data/roi &> /dev/null  || echo "roi folder does not exist"
-mkdir densecrf/data/roi
-mv data/small/roi/* densecrf/data/roi/
-mv data/medium/roi/* densecrf/data/roi/
-mv data/large/roi/* densecrf/data/roi/
+rm -r $CRFROI &> /dev/null  || echo "roi folder does not exist"
+mkdir $CRFROI
+mv ${DATA}/small/*.txt $CRFROI
+mv ${DATA}/medium/*.txt $CRFROI
+mv ${DATA}/large/*.txt $CRFROI
 
 # move image to densecrf
-cp $IMAGE densecrf/data/image/ || echo "image already exists"
+cp $IMAGE $CRFIMAGE || echo "image already exists"
 
 # run inference
-cd densecrf
-mkdir Results || echo "results folder already exists"
-rm -r Results/* || echo "results folder is empty"
+#cd densecrf
+mkdir $CRFRESULTS || echo "results folder already exists"
+rm -r $CRFRESULTS/* || echo "results folder is empty"
 
-# RunInference.bash
-#ROOT="~/cnn-densecrf-kitti-public/densecrf"
-
-ROOT="/home/s4328151/cnn-densecrf-kitti-public/densecrf"
-PATCH_FILE="${ROOT}/data/input/filelist.txt"
-RESULT_PATH="${ROOT}/Results"
+PATCH_FILE="${CRFINPUT}filelist.txt"
+RESULT_PATH="$CRFRESULTS"
 
 wl=1 # weight for local CNN prediction term (large patches)
 wm=1.7 # weight for local CNN prediction term (medium patches)
@@ -100,7 +114,7 @@ slocpr=0.2 # CNN prediction stddev
 
 iters=15 # iterations of mean field to run
 
-OUTPUT_FOLDER="${RESULT_PATH}/Results_wl${wl}_wm${wm}_ws${ws}_sp${sp}_wi${wi}_df${df}_wlocc${wlocc}_slocl${slocl}_slocpr${slocpr}_iters${iters}/"
+OUTPUT_FOLDER="${CRFRESULTS}/Results_wl${wl}_wm${wm}_ws${ws}_sp${sp}_wi${wi}_df${df}_wlocc${wlocc}_slocl${slocl}_slocpr${slocpr}_iters${iters}/"
 mkdir ${OUTPUT_FOLDER}
 #OUTPUT_FOLDER=$RESULT_PATH/
 
