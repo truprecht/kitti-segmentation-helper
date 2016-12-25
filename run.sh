@@ -2,8 +2,15 @@
 
 if [ -z $1 ] || [ -z $2 ]
 then
-    echo "use $0 <project root> <image file>"
+    echo "use $0 <project root> <image file> [<scripts folder>]"
     exit 1
+fi
+
+if [ -z $3 ]
+then
+    SCRIPTS=$(pwd)
+else
+    SCRIPTS=$3
 fi
 
 # SETUP
@@ -11,6 +18,10 @@ ROOT=$1
 if [ "${ROOT: -1}" != "/" ]
 then
     ROOT="${ROOT}/"
+fi
+if [ "${SCRIPTS: -1}" != "/" ]
+then
+    SCRIPTS="${SCRIPTS}/"
 fi
 IMAGE=$2
 DATA="${ROOT}data/"
@@ -49,9 +60,9 @@ mkdir $DATA
 (rm $PATCHLIST &> /dev/null; rm $PATCHLISTID &> /dev/null)  || echo "id lists do not exist"
 touch $PATCHLIST
 #cd cnn
-python2 ${ROOT}patchesv2.py $IMAGE $SWIDTH $SHEIGHT $SSTRIDE $LHEIGHT ${DATA}small "_3" >> ${PATCHLIST}_small
-python2 ${ROOT}patchesv2.py $IMAGE $MWIDTH $MHEIGHT $MSTRIDE $LHEIGHT ${DATA}medium "_2" >> ${PATCHLIST}_medium
-python2 ${ROOT}patchesv2.py $IMAGE $LWIDTH $LHEIGHT $LSTRIDE $LHEIGHT ${DATA}large "_1" >> ${PATCHLIST}_large
+python2 ${SCRIPTS}patchesv2.py $IMAGE $SWIDTH $SHEIGHT $SSTRIDE $LHEIGHT ${DATA}small "_3" >> ${PATCHLIST}_small
+python2 ${SCRIPTS}patchesv2.py $IMAGE $MWIDTH $MHEIGHT $MSTRIDE $LHEIGHT ${DATA}medium "_2" >> ${PATCHLIST}_medium
+python2 ${SCRIPTS}patchesv2.py $IMAGE $LWIDTH $LHEIGHT $LSTRIDE $LHEIGHT ${DATA}large "_1" >> ${PATCHLIST}_large
 
 # run cnn test on different patch sizes seperately, move 'em to data folder
 for size in small medium large
@@ -60,7 +71,7 @@ do
     mkdir $CNNOUT
 
     cp ${PATCHLIST}_${size} $PATCHLIST
-    python ${ROOT}idonly.py $PATCHLIST > $PATCHLISTID
+    python ${SCRIPTS}idonly.py $PATCHLIST > $PATCHLISTID
     # count files listed in test_list_id_only.txt
     iterations=$(wc -w $PATCHLISTID  | grep -o "^[0-9]\+")
     caffe test -model=$PROTOTXT -weights=$CAFFEMOD -iterations $iterations -gpu 0
@@ -78,9 +89,9 @@ done
 rm -r $CRFINPUT &> /dev/null  || echo "densecrf input folder does not exist"
 mkdir $CRFINPUT
 touch ${CRFINPUT}filelist.txt
-python2 resample.py ${DATA}/small/res $SWIDTH $SHEIGHT $CRFINPUT
-python2 resample.py ${DATA}/medium/res $MWIDTH $MHEIGHT $CRFINPUT
-python2 resample.py ${DATA}/large/res $LWIDTH $LHEIGHT $CRFINPUT
+python2 ${SCRIPTS}resample.py ${DATA}/small/res $SWIDTH $SHEIGHT $CRFINPUT
+python2 ${SCRIPTS}resample.py ${DATA}/medium/res $MWIDTH $MHEIGHT $CRFINPUT
+python2 ${SCRIPTS}resample.py ${DATA}/large/res $LWIDTH $LHEIGHT $CRFINPUT
 
 # move roi files to densecrf
 rm -r $CRFROI &> /dev/null  || echo "roi folder does not exist"
