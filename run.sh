@@ -29,8 +29,8 @@ DATA="${ROOT}data/"
 CNNOUT="${ROOT}cnn/fc8_val3769/"
 PROTOTXT="${ROOT}cnn/test.prototxt"
 CAFFEMOD="${ROOT}cnn/deeplab-kitti-60k.caffemodel"
-PATCHLIST="${ROOT}test_list.txt"
-PATCHLISTID="${ROOT}test_list_id_only.txt"
+PATCHLIST="test_list.txt"
+PATCHLISTID="test_list_id_only.txt"
 
 CRFINPUT="${ROOT}densecrf/data/input/"
 CRFROI="${ROOT}densecrf/data/roi/"
@@ -60,9 +60,9 @@ mkdir -p $DATA
 (rm $PATCHLIST &> /dev/null; rm $PATCHLISTID &> /dev/null)  || echo "id lists do not exist"
 touch $PATCHLIST
 #cd cnn
-python2 ${SCRIPTS}patchesv2.py $IMAGE $SWIDTH $SHEIGHT $SSTRIDE $LHEIGHT ${DATA}small "_3" >> ${PATCHLIST}_small
-python2 ${SCRIPTS}patchesv2.py $IMAGE $MWIDTH $MHEIGHT $MSTRIDE $LHEIGHT ${DATA}medium "_2" >> ${PATCHLIST}_medium
-python2 ${SCRIPTS}patchesv2.py $IMAGE $LWIDTH $LHEIGHT $LSTRIDE $LHEIGHT ${DATA}large "_1" >> ${PATCHLIST}_large
+python2 ${SCRIPTS}patchesv2.py $IMAGE $SWIDTH $SHEIGHT $SSTRIDE $LHEIGHT ${DATA}small "_3" > ${PATCHLIST}_small
+python2 ${SCRIPTS}patchesv2.py $IMAGE $MWIDTH $MHEIGHT $MSTRIDE $LHEIGHT ${DATA}medium "_2" > ${PATCHLIST}_medium
+python2 ${SCRIPTS}patchesv2.py $IMAGE $LWIDTH $LHEIGHT $LSTRIDE $LHEIGHT ${DATA}large "_1" > ${PATCHLIST}_large
 
 # run cnn test on different patch sizes seperately, move 'em to data folder
 for size in small medium large
