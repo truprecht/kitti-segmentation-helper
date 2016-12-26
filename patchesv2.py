@@ -34,9 +34,9 @@ def save_patches(patchlist, output_folder, basename, name_postfix="_"):
                 , postfix=name_postfix \
                 )
             imwrite(output_folder + labelfilename, label)
-            print "{patch} {label}".format(patch=patchfilename, label=labelfilename)
+            print "{patch} {label}".format(patch=output_folder + patchfilename, label=output_folder + labelfilename)
         else:
-            print patchfilename
+            print output_folder + patchfilename
         autoinc += 1
 
 
