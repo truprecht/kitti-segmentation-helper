@@ -26,7 +26,7 @@ def save_patches(patchlist, output_folder, basename, name_postfix="_"):
             )
         imwrite(output_folder + patchfilename, patch)
         with open(output_folder + patchfilename.replace(".png", ".txt"), "w") as roifile:
-            roifile.write(" ".join(roi))
+            roifile.write(" ".join([str(r) for r in roi]))
         if label is not None:
             labelfilename = "{basename}{postfix}_{uid:02d}_annot.png".format( \
                 basename=basename \
@@ -59,7 +59,7 @@ def crop(image, pwidth, pheight, stride, y_off, label_image=None):
     patch_tuples = []
 
     for current_x in range_x:
-        roi = (fixed_y+1, y+pheight, current_x+1, current_x+pwidth)
+        roi = (fixed_y+1, fixed_y+pheight, current_x+1, current_x+pwidth)
         patch = np.array(image[fixed_y:fixed_y+pheight, current_x:current_x+pwidth])
         labels = None
         if label_image is not None:

@@ -56,7 +56,7 @@ LSTRIDE=72
 # if input name = basename + file postfix
 #
 rm -r $DATA &> /dev/null || echo "data folder does not exist"
-mkdir $DATA
+mkdir -p $DATA
 (rm $PATCHLIST &> /dev/null; rm $PATCHLISTID &> /dev/null)  || echo "id lists do not exist"
 touch $PATCHLIST
 #cd cnn
@@ -68,10 +68,10 @@ python2 ${SCRIPTS}patchesv2.py $IMAGE $LWIDTH $LHEIGHT $LSTRIDE $LHEIGHT ${DATA}
 for size in small medium large
 do
     rm -r $CNNOUT &> /dev/null || echo "output folder does not exist"
-    mkdir $CNNOUT
+    mkdir -p $CNNOUT
 
     cp ${PATCHLIST}_${size} $PATCHLIST
-    python ${SCRIPTS}idonly.py $PATCHLIST > $PATCHLISTID
+    python2 ${SCRIPTS}idonly.py $PATCHLIST > $PATCHLISTID
     # count files listed in test_list_id_only.txt
     iterations=$(wc -w $PATCHLISTID  | grep -o "^[0-9]\+")
     caffe test -model=$PROTOTXT -weights=$CAFFEMOD -iterations $iterations -gpu 0
@@ -87,7 +87,7 @@ done
 # output name := basename + .dat, if input name = basename + _blob_0.mat 
 #
 rm -r $CRFINPUT &> /dev/null  || echo "densecrf input folder does not exist"
-mkdir $CRFINPUT
+mkdir -p $CRFINPUT
 touch ${CRFINPUT}filelist.txt
 python2 ${SCRIPTS}resample.py ${DATA}/small/res $SWIDTH $SHEIGHT $CRFINPUT
 python2 ${SCRIPTS}resample.py ${DATA}/medium/res $MWIDTH $MHEIGHT $CRFINPUT
@@ -95,17 +95,17 @@ python2 ${SCRIPTS}resample.py ${DATA}/large/res $LWIDTH $LHEIGHT $CRFINPUT
 
 # move roi files to densecrf
 rm -r $CRFROI &> /dev/null  || echo "roi folder does not exist"
-mkdir $CRFROI
-mv ${DATA}/small/*.txt $CRFROI
-mv ${DATA}/medium/*.txt $CRFROI
-mv ${DATA}/large/*.txt $CRFROI
+mkdir -p $CRFROI
+mv ${DATA}small/*.txt $CRFROI
+mv ${DATA}medium/*.txt $CRFROI
+mv ${DATA}large/*.txt $CRFROI
 
 # move image to densecrf
 cp $IMAGE $CRFIMAGE || echo "image already exists"
 
 # run inference
 #cd densecrf
-mkdir $CRFRESULTS || echo "results folder already exists"
+mkdir -p $CRFRESULTS || echo "results folder already exists"
 rm -r $CRFRESULTS/* || echo "results folder is empty"
 
 PATCH_FILE="${CRFINPUT}filelist.txt"
@@ -126,7 +126,7 @@ slocpr=0.2 # CNN prediction stddev
 iters=15 # iterations of mean field to run
 
 OUTPUT_FOLDER="${CRFRESULTS}/Results_wl${wl}_wm${wm}_ws${ws}_sp${sp}_wi${wi}_df${df}_wlocc${wlocc}_slocl${slocl}_slocpr${slocpr}_iters${iters}/"
-mkdir ${OUTPUT_FOLDER}
+mkdir -p ${OUTPUT_FOLDER}
 #OUTPUT_FOLDER=$RESULT_PATH/
 
 inference -p ${PATCH_FILE} -ws ${ws} -wm ${wm} -wl ${wl} -wi ${wi} -sp ${sp} -df ${df} -wc ${wc} -wp ${wp} -sps ${sps} -wcol ${wcol} -wlocc ${wlocc} -wlocp ${wlocp} -slocl ${slocl} -slocpr ${slocpr} -iters ${iters} -o ${OUTPUT_FOLDER}
