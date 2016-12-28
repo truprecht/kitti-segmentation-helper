@@ -34,7 +34,9 @@ def save_patches(patchlist, output_folder, basename, name_postfix="_"):
                 , postfix=name_postfix \
                 )
             imwrite(output_folder + labelfilename, label)
-            print "{patch} {label}".format(patch=output_folder + patchfilename, label=output_folder + labelfilename)
+            print "{patch} {label}".format(patch=output_folder + patchfilename \
+                                        , label=output_folder + labelfilename \
+                                        )
         else:
             print output_folder + patchfilename
         autoinc += 1
@@ -95,16 +97,19 @@ if __name__ == "__main__":
     except error:
         pass
 
-    save_patches( \
-        crop( \
-            imread(argv[1]) \
-            , int(argv[2]) \
-            , int(argv[3]) \
-            , int(argv[4]) \
-            , int(argv[5]) \
-            , label_image=(imread(argv[8], IMREAD_GRAYSCALE) if len(argv) == 9 else None) \
-            ) \
-        , argv[6] \
-        , search(r"""([^\./]+)\.\w+$""", argv[1]).group(1) \
-        , name_postfix=argv[7] \
-        )
+    try:
+        save_patches( \
+            crop( \
+                imread(argv[1]) \
+                , int(argv[2]) \
+                , int(argv[3]) \
+                , int(argv[4]) \
+                , int(argv[5]) \
+                , label_image=(imread(argv[8], IMREAD_GRAYSCALE) if len(argv) == 9 else None) \
+                ) \
+            , argv[6] \
+            , search(r"""([^\./]+)\.\w+$""", argv[1]).group(1) \
+            , name_postfix=argv[7] \
+            )
+    except Exception, e:
+        raise Exception("Failed for %s\n%s" %(argv[1],str(e)))

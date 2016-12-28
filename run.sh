@@ -26,7 +26,7 @@ fi
 IMAGE=$2
 DATA="${ROOT}data/"
 
-CNNOUT="${ROOT}cnn/fc8_val3769/"
+CNNOUT="fc8_val3769/"
 PROTOTXT="${ROOT}cnn/test.prototxt"
 CAFFEMOD="${ROOT}cnn/deeplab-kitti-60k.caffemodel"
 PATCHLIST="test_list.txt"
