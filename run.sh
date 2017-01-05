@@ -126,6 +126,7 @@ slocpr=0.2 # CNN prediction stddev
 iters=15 # iterations of mean field to run
 
 OUTPUT_FOLDER="${CRFRESULTS}/Results_wl${wl}_wm${wm}_ws${ws}_sp${sp}_wi${wi}_df${df}_wlocc${wlocc}_slocl${slocl}_slocpr${slocpr}_iters${iters}/"
+rm -r ${OUTPUT_FOLDER}$(basename ${IMAGE})
 mkdir -p ${OUTPUT_FOLDER}
 #OUTPUT_FOLDER=$RESULT_PATH/
 
