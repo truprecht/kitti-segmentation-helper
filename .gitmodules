@@ -1,0 +1,3 @@
+[submodule "cnn-densecrf-kitti-public"]
+	path = cnn-densecrf-kitti-public
+	url = https://bitbucket.org/zhangziyu1991/cnn-densecrf-kitti-public.git
