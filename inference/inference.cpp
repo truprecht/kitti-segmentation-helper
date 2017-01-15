@@ -8,6 +8,7 @@
 
 #include <iostream>
 #include <vector>
+#include <algorithm>
 #include <fstream>
 #include <map>
 
@@ -440,14 +441,16 @@ int main(int argc, char** argv) {
             Compatibilities[1] = Compatibilities[0].transpose();
             
             // read patch sizes
-            std::vector<int> sizes();
+            std::vector<int> sizes;
             int small, medium, large;
             for (int k = 0; k < imgData.rois.size(); k++) {
-                sizes.push_back(imgData.rois[k][1] - imgData.rois[k][0]);
+                int width = imgData.rois[k][1] - imgData.rois[k][0];
+                if (std::find(sizes.begin(), sizes.end(), width) == sizes.end())
+                    sizes.push_back(width);
             }
             std::sort(sizes.begin(), sizes.end());
             if (sizes.size() != 3) {
-                cout << "unexpected patch sizes" << endl;
+                std::cout << "unexpected patch sizes" << std::endl;
                 exit(-1);
             }
             small = sizes[0];
