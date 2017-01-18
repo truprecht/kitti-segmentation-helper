@@ -24,7 +24,7 @@ then
     SCRIPTS="${SCRIPTS}/"
 fi
 IMAGE=$2
-DATA="${ROOT}data/"
+DATA="data/"
 
 CNNOUT="fc8_val3769/"
 PROTOTXT="${ROOT}cnn/test.prototxt"
@@ -32,10 +32,10 @@ CAFFEMOD="${ROOT}cnn/cityscapes.caffemodel"
 PATCHLIST="test_list.txt"
 PATCHLISTID="test_list_id_only.txt"
 
-CRFINPUT="${ROOT}densecrf/data/input/"
-CRFROI="${ROOT}densecrf/data/roi/"
-CRFIMAGE="${ROOT}densecrf/data/image/"
-CRFRESULTS="${ROOT}densecrf/data/results/"
+CRFINPUT="data/input/"
+CRFROI="data/roi/"
+CRFIMAGE="data/image/"
+CRFRESULTS="data/results/"
 
 SWIDTH=275
 SHEIGHT=330
@@ -48,8 +48,6 @@ MSTRIDE=80
 LWIDTH=600
 LHEIGHT=750
 LSTRIDE=120
-
-cityscapes/leftImg8bit/test/bonn_000020_000019_leftImg8bit.png
 
 #
 # cut image patches
