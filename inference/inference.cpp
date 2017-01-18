@@ -30,7 +30,7 @@
 #include "connected.h"
 
 #define IMAGE_FOLDER "data/image"
-#define UNARY_FOLDER "data/unary"
+#define UNARY_FOLDER "data/input"
 #define ROI_FOLDER "data/roi"
 
 #ifdef _MSC_VER
