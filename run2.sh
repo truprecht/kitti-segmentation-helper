@@ -101,6 +101,7 @@ mv ${DATA}medium/*.txt $CRFROI
 mv ${DATA}large/*.txt $CRFROI
 
 # move image to densecrf
+mkdir -p $CRFIMAGE
 cp $IMAGE $CRFIMAGE || echo "image already exists"
 
 # run inference
