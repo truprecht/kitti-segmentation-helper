@@ -15,7 +15,7 @@ cp "${INFERENCE}" "${DENSECRF}inference/inference.cpp"
 cd "${DENSECRF}"
 mkdir "build"
 cd "build"
-cmake ..
+cmake -D CMAKE_BUILD_TYPE=Release ..
 make
 cd "$TMP"
 cp "${DENSECRF}/build/inference/inference" "${OUT}inference"
