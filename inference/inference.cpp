@@ -453,6 +453,12 @@ int main(int argc, char** argv) {
                 std::cout << "unexpected patch sizes" << std::endl;
                 exit(-1);
             }
+            else {
+                std::cout << "using sizes:\n"
+                          << "small(" << sizes[0] << ")\n"
+                          << "medium(" << sizes[1] << ")\n"
+                          << "large(" << sizes[2] << ")\n";
+            }
             small = sizes[0];
             medium = sizes[1];
             large = sizes[2];

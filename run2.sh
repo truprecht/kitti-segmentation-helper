@@ -112,23 +112,43 @@ rm -r $CRFRESULTS/* || echo "results folder is empty"
 PATCH_FILE="${CRFINPUT}filelist.txt"
 RESULT_PATH="$CRFRESULTS"
 
-wl=1 # weight for local CNN prediction term (large patches)
-wm=1.7 # weight for local CNN prediction term (medium patches)
-ws=1.7 # weight for local CNN prediction term (small patches)
-sp=0.1 # stddev in the kernel
+function r {
+    if [ -z $1 ]
+    then
+        mod=10
+    else
+        mod=$1
+    fi
+    if [ -z $2 ]
+    then
+        off=0
+    else
+        off=$2
+    fi
+    echo $[(RANDOM % $mod) + $off]
+}
 
-wi=12 # weight for inter-connected component term
-df=0.6 # threshold for obtaining foreground map
 
-wlocc=1.7 # weight for smoothness term
-slocl=80 # spatial stddev
-slocpr=0.2 # CNN prediction stddev
+for i in `seq 1 50`
+do
+    wl=$(r 2).$(r) # weight for local CNN prediction term (large patches)
+    wm=$(r 2).$(r) # weight for local CNN prediction term (medium patches)
+    ws=$(r 2).$(r) # weight for local CNN prediction term (small patches)
+    sp=0.$(r)$(r) # stddev in the kernel
 
-iters=15 # iterations of mean field to run
+    wi=$(r 10 6) # weight for inter-connected component term
+    df=0.$(r) # threshold for obtaining foreground map
 
-OUTPUT_FOLDER="${CRFRESULTS}Results_wl${wl}_wm${wm}_ws${ws}_sp${sp}_wi${wi}_df${df}_wlocc${wlocc}_slocl${slocl}_slocpr${slocpr}_iters${iters}"
-rm -r ${OUTPUT_FOLDER}/$(basename ${IMAGE})
-mkdir -p ${OUTPUT_FOLDER}
-#OUTPUT_FOLDER=$RESULT_PATH/
+    wlocc=$(r 2).$(r) # weight for smoothness term
+    slocl=$(r 50 50) # spatial stddev
+    slocpr=0.$(r) # CNN prediction stddev
 
-inference -p ${PATCH_FILE} -ws ${ws} -wm ${wm} -wl ${wl} -wi ${wi} -sp ${sp} -df ${df} -wc ${wc} -wp ${wp} -sps ${sps} -wcol ${wcol} -wlocc ${wlocc} -wlocp ${wlocp} -slocl ${slocl} -slocpr ${slocpr} -iters ${iters} -o ${OUTPUT_FOLDER}
+    iters=50 # iterations of mean field to run
+
+    OUTPUT_FOLDER="${CRFRESULTS}Results_wl${wl}_wm${wm}_ws${ws}_sp${sp}_wi${wi}_df${df}_wlocc${wlocc}_slocl${slocl}_slocpr${slocpr}_iters${iters}"
+    rm -r ${OUTPUT_FOLDER}/$(basename ${IMAGE})
+    mkdir -p ${OUTPUT_FOLDER}
+    OUTPUT_FOLDER=$RESULT_PATH/
+
+    inference -p ${PATCH_FILE} -ws ${ws} -wm ${wm} -wl ${wl} -wi ${wi} -sp ${sp} -df ${df} -wc ${wc} -wp ${wp} -sps ${sps} -wcol ${wcol} -wlocc ${wlocc} -wlocp ${wlocp} -slocl ${slocl} -slocpr ${slocpr} -iters ${iters} -o ${OUTPUT_FOLDER}
+done
