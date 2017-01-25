@@ -35,7 +35,7 @@ PATCHLISTID="test_list_id_only.txt"
 CRFINPUT="data/input/"
 CRFROI="data/roi/"
 CRFIMAGE="data/image/"
-CRFRESULTS="data/results/"
+CRFRESULTS="data/results"
 
 SWIDTH=275
 SHEIGHT=330
@@ -110,7 +110,6 @@ mkdir -p $CRFRESULTS || echo "results folder already exists"
 rm -r $CRFRESULTS/* || echo "results folder is empty"
 
 PATCH_FILE="${CRFINPUT}filelist.txt"
-RESULT_PATH="$CRFRESULTS"
 
 function r {
     if [ -z $1 ]
@@ -145,10 +144,9 @@ do
 
     iters=50 # iterations of mean field to run
 
-    OUTPUT_FOLDER="${CRFRESULTS}Results_wl${wl}_wm${wm}_ws${ws}_sp${sp}_wi${wi}_df${df}_wlocc${wlocc}_slocl${slocl}_slocpr${slocpr}_iters${iters}"
+    OUTPUT_FOLDER="${CRFRESULTS}/Results_wl${wl}_wm${wm}_ws${ws}_sp${sp}_wi${wi}_df${df}_wlocc${wlocc}_slocl${slocl}_slocpr${slocpr}_iters${iters}"
     rm -r ${OUTPUT_FOLDER}/$(basename ${IMAGE})
     mkdir -p ${OUTPUT_FOLDER}
-    OUTPUT_FOLDER=$RESULT_PATH/
 
     inference -p ${PATCH_FILE} -ws ${ws} -wm ${wm} -wl ${wl} -wi ${wi} -sp ${sp} -df ${df} -wc ${wc} -wp ${wp} -sps ${sps} -wcol ${wcol} -wlocc ${wlocc} -wlocp ${wlocp} -slocl ${slocl} -slocpr ${slocpr} -iters ${iters} -o ${OUTPUT_FOLDER}
 done
