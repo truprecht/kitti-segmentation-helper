@@ -1,0 +1,29 @@
+#!/usr/bin/python2
+
+import cv2
+import numpy as np
+from sys import argv
+
+if __name__ == "__main__":
+    assert len(argv) == 5, \
+        "use " + argv[0] + " <prediction> <orig. width> <orig. height> <output folder>"
+
+    filename = prediction.split("/")[-1].split(".")[0]
+
+    oheight, owidth = argv[3], argv[2]
+
+    prediction_ = cv2.imread(argv[1], cv2.IMREAD_GRAYSCALE)
+    pheight, pwidth = prediction_.shape
+
+    # add zero padding to match original shape
+    prediction = np.zeros((oheight, owidth))
+    prediction[oheight-pheight:oheight, owidth-pwidth:pwidth] = prediction_
+
+    for i in numpy.unique(prediction):
+        if i == 0:
+            id = 0
+        else:
+            id = 1
+        maskfilename = "%s%d%s" %(filename, str(id), ".png")
+        cv.imwrite(prediction == i, maskfilename)
+        print "%s %d %d" %(maskfilename, id, 1)
