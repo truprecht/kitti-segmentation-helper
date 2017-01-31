@@ -66,10 +66,9 @@ def crop(image, pwidth, pheight, stride, y_off, label_image=None):
         labels = None
         if label_image is not None:
             labels = np.array(label_image[fixed_y:fixed_y+pheight, current_x:current_x+pwidth])
-            np.place(labels, labels > 8, [0])
 
             # normalize train IDs to increment from 1 to |l| in each patch locally
-            i = 1
+            i = 0
             for label in np.unique(labels):
                 np.place(labels, labels == label, [i])
                 i += 1
