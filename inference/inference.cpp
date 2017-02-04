@@ -317,8 +317,10 @@ int main(int argc, char** argv) {
         std::string pName = patchNames[k];
 
         int extensionPos = pName.find_last_of("_", pName.find_last_of("_")-1); // find second last '_'
+        int extensionEnd = pName.find_last_of(".");
+
         std::string imageName = pName.substr(0, extensionPos);
-        std::string patchExtension = pName.substr(extensionPos);
+        std::string patchExtension = pName.substr(extensionPos, extensionEnd - extensionPos);
         
         std::map<std::string, std::vector<std::string> >::iterator iter2 = imagePatchMappings.find(imageName);
         if (iter2 == imagePatchMappings.end()) {
