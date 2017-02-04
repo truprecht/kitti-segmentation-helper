@@ -1,4 +1,4 @@
-#/bin/bash
+#!/bin/bash
 
 # $1 -- inference.cpp
 # $2 -- ../cnn-densecrf-kitty-public/densecrf/

@@ -315,10 +315,11 @@ int main(int argc, char** argv) {
     std::map<std::string, std::vector<std::string> > imagePatchMappings;
     for (int k = 0, k_e = (int)patchNames.size(); k != k_e; ++k) {
         std::string pName = patchNames[k];
-        std::string imageName = pName.substr(0, pName.find_first_of("_"));//"000019"
-        //std::string imageName = pName.substr(0, pName.size()-5);//"000019"
-        std::string patchExtension = pName.substr(pName.find_first_of("_"), 5);//"_1_01"
-        //std::string patchExtension = pName.substr(9);//"_1_01"
+
+        int extensionPos = pName.find_last_of("_", pName.find_last_of("_")-1); // find second last '_'
+        std::string imageName = pName.substr(0, extensionPos);
+        std::string patchExtension = pName.substr(extensionPos);
+        
         std::map<std::string, std::vector<std::string> >::iterator iter2 = imagePatchMappings.find(imageName);
         if (iter2 == imagePatchMappings.end()) {
             imagePatchMappings.insert(std::pair<std::string, std::vector<std::string> >(imageName, std::vector<std::string>(1, patchExtension)));
