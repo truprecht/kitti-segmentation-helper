@@ -60,7 +60,7 @@ mkdir -p $DATA
 rm ${PATCHLIST}_small ${PATCHLIST}_medium ${PATCHLIST}_large &> /dev/null
 touch ${PATCHLIST}_small ${PATCHLIST}_medium ${PATCHLIST}_large
 
-for $IMAGE in $(cat $IMAGELIST)
+for IMAGE in $(cat $IMAGELIST)
 do
     python2 ${SCRIPTS}patchesv2.py $IMAGE $SWIDTH $SHEIGHT $SSTRIDE $LHEIGHT ${DATA}small "_3" >> ${PATCHLIST}_small
     python2 ${SCRIPTS}patchesv2.py $IMAGE $MWIDTH $MHEIGHT $MSTRIDE $LHEIGHT ${DATA}medium "_2" >> ${PATCHLIST}_medium
@@ -104,7 +104,7 @@ mv ${DATA}large/*.txt $CRFROI
 
 # move image to densecrf
 mkdir -p $CRFIMAGE
-for $IMAGE in $(cat $IMAGELIST)
+for IMAGE in $(cat $IMAGELIST)
 do
     cp $IMAGE $CRFIMAGE || echo "image already exists"
 done
