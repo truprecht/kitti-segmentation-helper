@@ -8,9 +8,10 @@ if __name__ == "__main__":
     assert len(argv) == 5, \
         "use " + argv[0] + " <prediction> <orig. width> <orig. height> <output folder>"
 
-    filename = prediction.split("/")[-1].split(".")[0]
+    ofolder = argv[4] if argv[4][-1] == "/" else argv + "/"
+    filename = argv[1].split("/")[-1].split(".")[0]
 
-    oheight, owidth = argv[3], argv[2]
+    oheight, owidth = int(argv[3]), int(argv[2])
 
     prediction_ = cv2.imread(argv[1], cv2.IMREAD_GRAYSCALE)
     pheight, pwidth = prediction_.shape
@@ -19,11 +20,11 @@ if __name__ == "__main__":
     prediction = np.zeros((oheight, owidth))
     prediction[oheight-pheight:oheight, owidth-pwidth:pwidth] = prediction_
 
-    for i in numpy.unique(prediction):
+    for i in np.unique(prediction):
         if i == 0:
             id = 0
         else:
             id = 1
-        maskfilename = "%s%d%s" %(filename, str(id), ".png")
-        cv.imwrite(prediction == i, maskfilename)
+        maskfilename = "%s%s%d%s" %(ofolder, filename, i, ".png")
+        cv2.imwrite(maskfilename, np.array(prediction == i, dtype=np.uint8))
         print "%s %d %d" %(maskfilename, id, 1)
