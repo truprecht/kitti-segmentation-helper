@@ -2,7 +2,7 @@
 
 if [ -z $1 ] || [ -z $2 ]
 then
-    echo "use $0 <project root> <image file> [<scripts folder>]"
+    echo "use $0 <project root> <image list> [<scripts folder>]"
     exit 1
 fi
 
@@ -23,7 +23,7 @@ if [ "${SCRIPTS: -1}" != "/" ]
 then
     SCRIPTS="${SCRIPTS}/"
 fi
-IMAGE=$2
+IMAGELIST=$2
 DATA="data/"
 
 CNNOUT="fc8_val3769/"
@@ -55,14 +55,17 @@ LSTRIDE=120
 # st. output name := basename + postfix + autoincrement + file postfix, 
 # if input name = basename + file postfix
 #
-rm -r $DATA &> /dev/null || echo "data folder does not exist"
+rm -r $DATA &> /dev/null
 mkdir -p $DATA
-(rm $PATCHLIST &> /dev/null; rm $PATCHLISTID &> /dev/null)  || echo "id lists do not exist"
-touch $PATCHLIST
-#cd cnn
-python2 ${SCRIPTS}patchesv2.py $IMAGE $SWIDTH $SHEIGHT $SSTRIDE $LHEIGHT ${DATA}small "_3" > ${PATCHLIST}_small
-python2 ${SCRIPTS}patchesv2.py $IMAGE $MWIDTH $MHEIGHT $MSTRIDE $LHEIGHT ${DATA}medium "_2" > ${PATCHLIST}_medium
-python2 ${SCRIPTS}patchesv2.py $IMAGE $LWIDTH $LHEIGHT $LSTRIDE $LHEIGHT ${DATA}large "_1" > ${PATCHLIST}_large
+rm ${PATCHLIST}_small ${PATCHLIST}_medium ${PATCHLIST}_large &> /dev/null
+touch ${PATCHLIST}_small ${PATCHLIST}_medium ${PATCHLIST}_large
+
+for $IMAGE in $(cat $IMAGELIST)
+do
+    python2 ${SCRIPTS}patchesv2.py $IMAGE $SWIDTH $SHEIGHT $SSTRIDE $LHEIGHT ${DATA}small "_3" >> ${PATCHLIST}_small
+    python2 ${SCRIPTS}patchesv2.py $IMAGE $MWIDTH $MHEIGHT $MSTRIDE $LHEIGHT ${DATA}medium "_2" >> ${PATCHLIST}_medium
+    python2 ${SCRIPTS}patchesv2.py $IMAGE $LWIDTH $LHEIGHT $LSTRIDE $LHEIGHT ${DATA}large "_1" >> ${PATCHLIST}_large
+done
 
 # run cnn test on different patch sizes seperately, move 'em to data folder
 for size in small medium large
@@ -79,7 +82,6 @@ do
     mv $CNNOUT ${DATA}$size/res
 done
 
-#cd ..
 #
 # resample classifications to original patch size, move w/ to densecrf
 # call resample.py <input dir> <resampled width> <resampled height> <output dir>
@@ -102,7 +104,10 @@ mv ${DATA}large/*.txt $CRFROI
 
 # move image to densecrf
 mkdir -p $CRFIMAGE
-cp $IMAGE $CRFIMAGE || echo "image already exists"
+for $IMAGE in $(cat $IMAGELIST)
+do
+    cp $IMAGE $CRFIMAGE || echo "image already exists"
+done
 
 # run inference
 #cd densecrf
@@ -127,20 +132,6 @@ function r {
     echo $[(RANDOM % $mod) + $off]
 }
 
-
-# for i in `seq 1 50`
-# do
-    # wl=$(r 2).$(r) # weight for local CNN prediction term (large patches)
-    # wm=$(r 2).$(r) # weight for local CNN prediction term (medium patches)
-    # ws=$(r 2).$(r) # weight for local CNN prediction term (small patches)
-    # sp=0.$(r)$(r) # stddev in the kernel
-
-    # wi=$(r 10 6) # weight for inter-connected component term
-    # df=0.$(r) # threshold for obtaining foreground map
-
-    # wlocc=$(r 2).$(r) # weight for smoothness term
-    # slocl=$(r 50 50) # spatial stddev
-    # slocpr=0.$(r) # CNN prediction stddev
 wl=1 # weight for local CNN prediction term (large patches)
 wm=1.7 # weight for local CNN prediction term (medium patches)
 ws=1.7 # weight for local CNN prediction term (small patches)
@@ -155,8 +146,6 @@ slocpr=0.2 # CNN prediction stddev
 iters=50 # iterations of mean field to run
 
 OUTPUT_FOLDER="${CRFRESULTS}/Results_wl${wl}_wm${wm}_ws${ws}_sp${sp}_wi${wi}_df${df}_wlocc${wlocc}_slocl${slocl}_slocpr${slocpr}_iters${iters}"
-rm -r ${OUTPUT_FOLDER}/$(basename ${IMAGE})
 mkdir -p ${OUTPUT_FOLDER}
 
 inference -p ${PATCH_FILE} -ws ${ws} -wm ${wm} -wl ${wl} -wi ${wi} -sp ${sp} -df ${df} -wc ${wc} -wp ${wp} -sps ${sps} -wcol ${wcol} -wlocc ${wlocc} -wlocp ${wlocp} -slocl ${slocl} -slocpr ${slocpr} -iters ${iters} -o ${OUTPUT_FOLDER}
-# done
