@@ -271,7 +271,7 @@ int main(int argc, char** argv) {
     }
     ClusterSize = MPI::COMM_WORLD.Get_size();
     ClusterID = MPI::COMM_WORLD.Get_rank();
-    cout << "Using cluster size " << ClusterSize << "@" << ClusterID;
+    std::cout << "Using cluster size " << ClusterSize << "@" << ClusterID << std::endl;
 #endif
 #if defined(__APPLE__) && defined(WITH_MPI)
     if (ClusterID == 0 && ClusterSize>1) {
@@ -354,7 +354,7 @@ int main(int argc, char** argv) {
     std::cout << "Number of images after removing already existed: " << imagePatchMappings.size() << std::endl;
 
 #ifndef __APPLE__
-    omp_set_num_threads(2);
+    //omp_set_num_threads(2);
 #pragma omp parallel for
 #endif
     for (int x = ClusterID; x < int(imagePatchMappings.size()); x+=ClusterSize) {
