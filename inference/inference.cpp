@@ -271,6 +271,7 @@ int main(int argc, char** argv) {
     }
     ClusterSize = MPI::COMM_WORLD.Get_size();
     ClusterID = MPI::COMM_WORLD.Get_rank();
+    cout << "Using cluster size " << ClusterSize << "@" << ClusterID;
 #endif
 #if defined(__APPLE__) && defined(WITH_MPI)
     if (ClusterID == 0 && ClusterSize>1) {
@@ -321,12 +322,15 @@ int main(int argc, char** argv) {
 
         std::string imageName = pName.substr(0, extensionPos);
         std::string patchExtension = pName.substr(extensionPos, extensionEnd - extensionPos);
+        std::cout << "found patch " << patchExtension << " of image " << imageName << std::endl;
         
         std::map<std::string, std::vector<std::string> >::iterator iter2 = imagePatchMappings.find(imageName);
         if (iter2 == imagePatchMappings.end()) {
             imagePatchMappings.insert(std::pair<std::string, std::vector<std::string> >(imageName, std::vector<std::string>(1, patchExtension)));
+            std::cout << " -> created new patchlist of image " << imageName << std::endl;
         } else {
             iter2->second.push_back(patchExtension);
+            std::cout << " -> inserted into patchlist of image " << iter2->first << std::endl;
         }
     }
     
