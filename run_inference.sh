@@ -3,12 +3,12 @@
 #SBATCH --time=8:00:00
 #SBATCH --nodes=1
 #SBATCH --ntasks=1
-#SBATCH --cpus-per-task=24
-#SBATCH --mem-per-cpu=10583M
+#SBATCH --cpus-per-task=16
+#SBATCH --mem-per-cpu=7875M
 #SBATCH --mail-user=thomas.ruprecht@tu-dresden.de
 #SBATCH --mail-type=END,FAIL
 
-export OMP_NUM_THREADS=12
+export OMP_NUM_THREADS=6
 
 
 if [ -z $1 ]

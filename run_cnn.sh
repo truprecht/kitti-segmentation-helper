@@ -75,7 +75,7 @@ done
 # run cnn test on different patch sizes seperately, move 'em to data folder
 for size in small medium large
 do
-    rm -r $CNNOUT &> /dev/null || echo "output folder does not exist"
+    rm -r $CNNOUT &> /dev/null
     mkdir -p $CNNOUT
 
     cp ${PATCHLIST}_${size} $PATCHLIST
