@@ -45,12 +45,15 @@ mkdir -p $3
 rm $4
 touch $4
 
-for image in ${IMAGES}*
+for folder in ${IMAGES}*
 do
-    image=$(basename $image)
-    annot=$(echo $image | sed 's/_leftImg8bit/_gtFine_instanceTrainIds/')
+    for image in ${IMAGES}${folder}/*
+    do
+        image=$(basename $image)
+        annot=$(echo $image | sed 's/_leftImg8bit/_gtFine_instanceTrainIds/')
 
-    python2 ${SCRIPTS}patchesv2.py ${IMAGES}$image $SWIDTH $SHEIGHT $SSTRIDE $LHEIGHT ${OUT} _3 ${LABELS}$annot >> $4
-    python2 ${SCRIPTS}patchesv2.py ${IMAGES}$image $MWIDTH $MHEIGHT $MSTRIDE $LHEIGHT ${OUT} _2 ${LABELS}$annot >> $4
-    python2 ${SCRIPTS}patchesv2.py ${IMAGES}$image $LWIDTH $LHEIGHT $LSTRIDE $LHEIGHT ${OUT} _1 ${LABELS}$annot >> $4
+        python2 ${SCRIPTS}patchesv2.py ${IMAGES}$image $SWIDTH $SHEIGHT $SSTRIDE $LHEIGHT ${OUT} _3 ${LABELS}$annot >> $4
+        python2 ${SCRIPTS}patchesv2.py ${IMAGES}$image $MWIDTH $MHEIGHT $MSTRIDE $LHEIGHT ${OUT} _2 ${LABELS}$annot >> $4
+        python2 ${SCRIPTS}patchesv2.py ${IMAGES}$image $LWIDTH $LHEIGHT $LSTRIDE $LHEIGHT ${OUT} _1 ${LABELS}$annot >> $4
+    done
 done
