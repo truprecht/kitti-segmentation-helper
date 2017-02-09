@@ -82,7 +82,7 @@ do
     python2 ${SCRIPTS}idonly.py $PATCHLIST > $PATCHLISTID
     # count files listed in test_list_id_only.txt
     iterations=$(wc -w $PATCHLISTID  | grep -o "^[0-9]\+")
-    caffe test -model=$PROTOTXT -weights=$CAFFEMOD -iterations $iterations -gpu 0
+    srun caffe test -model=$PROTOTXT -weights=$CAFFEMOD -iterations $iterations -gpu 0
 
     mv $CNNOUT ${DATA}$size/res
 done
