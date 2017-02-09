@@ -35,7 +35,6 @@ else
 fi
 
 # run inference
-rm -r $OUT
 mkdir -p $OUT
 
 wl=1 # weight for local CNN prediction term (large patches)
