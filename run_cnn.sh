@@ -72,6 +72,8 @@ do
     python2 ${SCRIPTS}patchesv2.py $IMAGE $LWIDTH $LHEIGHT $LSTRIDE $LHEIGHT ${DATA}large "_1" >> ${PATCHLIST}_large
 done
 
+mkdir -p $CRFINPUT
+
 # run cnn test on different patch sizes seperately, move 'em to data folder
 for size in small medium large
 do
@@ -84,23 +86,10 @@ do
     iterations=$(wc -w $PATCHLISTID  | grep -o "^[0-9]\+")
     caffe test -model=$PROTOTXT -weights=$CAFFEMOD -iterations $iterations -gpu 0
 
-    mv $CNNOUT ${DATA}$size/res
+    mv $CNNOUT ${CRFINPUT}$size
 done
-
 rm ${PATCHLIST}_small ${PATCHLIST}_medium ${PATCHLIST}_large &> /dev/null
 
-#
-# resample classifications to original patch size, move w/ to densecrf
-# call resample.py <input dir> <resampled width> <resampled height> <output dir>
-# only resamples *.mat files, 
-# output name := basename + .dat, if input name = basename + _blob_0.mat 
-#
-rm -r $OUT &> /dev/null
-mkdir -p $CRFINPUT
-touch ${CRFINPUT}filelist.txt
-python2 ${SCRIPTS}resample.py ${DATA}/small/res $SWIDTH $SHEIGHT $CRFINPUT
-python2 ${SCRIPTS}resample.py ${DATA}/medium/res $MWIDTH $MHEIGHT $CRFINPUT
-python2 ${SCRIPTS}resample.py ${DATA}/large/res $LWIDTH $LHEIGHT $CRFINPUT
 
 # move roi files to densecrf
 mkdir -p $CRFROI
@@ -115,3 +104,7 @@ for IMAGE in $(cat $IMAGELIST)
 do
     cp $IMAGE $CRFIMAGE
 done
+
+tar -czf ${OUT}input.tar.gz $CRFINPUT & rm -r $CRFINPUT
+tar -czf ${OUT}image.tar.gz $CRFIMAGE & rm -r $CRFIMAGE
+tar -czf ${OUT}roi.tar.gz $CRFROI & rm -r $CRFROI

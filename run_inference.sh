@@ -13,7 +13,7 @@ export OMP_NUM_THREADS=12
 
 if [ -z $1 ]
 then
-    echo "use $0 <file list> [<output folder>]"
+    echo "use $0 <input folder> <scripts folder> [<output folder>]"
     exit 1
 fi
 
@@ -26,13 +26,43 @@ function path() {
     fi
 }
 
-LIST=$1
+ROOT=$(path $1)
+IMAGES=${ROOT}image.tar.gz
+PATCHES=${ROOT}input.tar.gz
+ROIS=${ROOT}roi.tar.gz
+
+tar -xzf $IMAGES -C $ROOT
+tar -xzf $PATCHES -C $ROOT
+tar -xzf $ROIS -C $ROOT
+
+SCRIPTS=$(path $2)
+
 if [ -z $2 ]
 then
     OUT="CRFRESULT/"
 else
-    OUT=$(path $2)
+    OUT=$(path $3)
 fi
+
+
+# resample classifications to original patch size, move w/ to densecrf
+# call resample.py <input dir> <resampled width> <resampled height> <output dir>
+# only resamples *.mat files, 
+# output name := basename + .dat, if input name = basename + _blob_0.mat
+
+SWIDTH=275
+SHEIGHT=330
+
+MWIDTH=400
+MHEIGHT=500
+
+LWIDTH=600
+LHEIGHT=750
+
+touch ${PATCHES}filelist.txt
+python2 ${SCRIPTS}resample.py $PATCHES/small $SWIDTH $SHEIGHT $PATCHES
+python2 ${SCRIPTS}resample.py $PATCHES/medium $MWIDTH $MHEIGHT $PATCHES
+python2 ${SCRIPTS}resample.py $PATCHES/large $LWIDTH $LHEIGHT $PATCHES
 
 # run inference
 rm -r $OUT
