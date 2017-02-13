@@ -42,7 +42,7 @@ LIST=${PATCHES}/filelist.txt
 
 SCRIPTS=$(path $2)
 
-if [ -z $2 ]
+if [ -z $3 ]
 then
     OUT="CRFRESULT/"
 else
