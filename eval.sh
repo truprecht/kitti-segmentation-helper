@@ -6,6 +6,8 @@ Mfolder=$3
 
 evalscript=$4
 
+mkdir -p ${Mfolder}
+
 for prediction in ${PRfolder}*.png
 do
     pname=$(basename $prediction | sed 's/.png//')

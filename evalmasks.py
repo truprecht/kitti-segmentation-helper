@@ -25,6 +25,6 @@ if __name__ == "__main__":
             id = 0
         else:
             id = 26
-        maskfilename = "%s%s%d%s" %(ofolder, filename, i, ".png")
-        cv2.imwrite(maskfilename, np.array(prediction == i, dtype=np.uint8))
+        maskfilename = "%s%d%s" %(filename, i, ".png")
+        cv2.imwrite(ofolder + maskfilename, np.array(prediction == i, dtype=np.uint8))
         print "%s %d %d" %(maskfilename, id, 1)
