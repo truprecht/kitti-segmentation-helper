@@ -60,7 +60,8 @@ LWIDTH=600
 LHEIGHT=750
 
 PATCHES=${ROOT}input
-touch ${PATCHES}filelist.txt
+LIST=${PATCHES}/filelist.txt
+touch $LIST
 
 python2 ${SCRIPTS}resample.py $PATCHES/small $SWIDTH $SHEIGHT $PATCHES
 python2 ${SCRIPTS}resample.py $PATCHES/medium $MWIDTH $MHEIGHT $PATCHES
