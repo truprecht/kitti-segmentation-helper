@@ -31,9 +31,9 @@ IMAGES=${ROOT}image.tar.gz
 PATCHES=${ROOT}input.tar.gz
 ROIS=${ROOT}roi.tar.gz
 
-tar -xzf $IMAGES -C $ROOT
-tar -xzf $PATCHES -C $ROOT
-tar -xzf $ROIS -C $ROOT
+tar -xzf $IMAGES
+tar -xzf $PATCHES
+tar -xzf $ROIS
 
 SCRIPTS=$(path $2)
 
@@ -59,7 +59,9 @@ MHEIGHT=500
 LWIDTH=600
 LHEIGHT=750
 
+PATCHES=${ROOT}input
 touch ${PATCHES}filelist.txt
+
 python2 ${SCRIPTS}resample.py $PATCHES/small $SWIDTH $SHEIGHT $PATCHES
 python2 ${SCRIPTS}resample.py $PATCHES/medium $MWIDTH $MHEIGHT $PATCHES
 python2 ${SCRIPTS}resample.py $PATCHES/large $LWIDTH $LHEIGHT $PATCHES
