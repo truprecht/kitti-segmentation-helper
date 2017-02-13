@@ -35,6 +35,11 @@ tar -xzf $IMAGES
 tar -xzf $PATCHES
 tar -xzf $ROIS
 
+PATCHES=${ROOT}input
+IMAGES=${ROOT}image
+ROIS=${ROOT}roi
+LIST=${PATCHES}/filelist.txt
+
 SCRIPTS=$(path $2)
 
 if [ -z $2 ]
@@ -59,8 +64,6 @@ MHEIGHT=500
 LWIDTH=600
 LHEIGHT=750
 
-PATCHES=${ROOT}input
-LIST=${PATCHES}/filelist.txt
 touch $LIST
 
 python2 ${SCRIPTS}resample.py $PATCHES/small $SWIDTH $SHEIGHT $PATCHES
@@ -84,3 +87,5 @@ slocpr=0.2 # CNN prediction stddev
 iters=50 # iterations of mean field to run
 
 srun inference -p $LIST -ws ${ws} -wm ${wm} -wl ${wl} -wi ${wi} -sp ${sp} -df ${df} -wc ${wc} -wp ${wp} -sps ${sps} -wcol ${wcol} -wlocc ${wlocc} -wlocp ${wlocp} -slocl ${slocl} -slocpr ${slocpr} -iters ${iters} -o $OUT
+
+rm -r $PATCHES $IMAGES $ROIS
