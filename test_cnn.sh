@@ -48,6 +48,7 @@ do
     rm $class
     
     iterations=$(wc -w $TESTLISTID  | grep -o "^[0-9]\+")
+    mkdir ${PREDICTIONS}${modelname}.d/
     
     for model in $(cat $CAFFEMODELS)
     do
@@ -62,6 +63,6 @@ do
     for prediction in $model/*
     do
         gt=$(basename $prediction | sed 's/leftImg8bit_1_03_blob_0.mat/gtFine_labelIds.png/')
-        python2 evalclass.py $gt $prediction >> ${model}/performance.txt
+        python2 ${SCIPTS}evalclass.py $gt $prediction >> ${model}/performance.txt
     done
 done
