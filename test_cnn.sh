@@ -27,7 +27,7 @@ PATCHES="${DATA}patches/"
 PATCHLIST="${PATCHES}list.txt"
 PREDICTIONS="${DATA}pred/"
 TESTLIST="test_list.txt"
-TESTLISTID="testlist_id_only.txt"
+TESTLISTID="test_list_id_only.txt"
 mkdir -p $PATCHES
 mkdir -p $PREDICTIONS
 
@@ -43,44 +43,44 @@ LWIDTH=600
 LHEIGHT=750
 LSTRIDE=120
 
-for model in $(cat $CAFFEMODELS)
-do 
-    modelname=$(basename $model)
-    mkdir ${PREDICTIONS}${modelname}.d
-done
+# for model in $(cat $CAFFEMODELS)
+# do 
+#     modelname=$(basename $model)
+#     mkdir ${PREDICTIONS}${modelname}.d
+# done
 
-for file in $(cat $FILES)
-do
-    annot=$(basename $file | sed 's/leftImg8bit/gtFine_labelIds/')
-    class=${DATA}${annot}
+# for file in $(cat $FILES)
+# do
+#     annot=$(basename $file | sed 's/leftImg8bit/gtFine_labelIds/')
+#     class=${DATA}${annot}
     
-    python2 ${SCRIPTS}binary.py ${GT}${annot} 26 $class
+#     python2 ${SCRIPTS}binary.py ${GT}${annot} 26 $class
     
-    touch $PATCHLIST
-    python2 ${SCRIPTS}patchesv2.py $file $SWIDTH $SHEIGHT $SSTRIDE $LHEIGHT ${PATCHES} "_3" $class >> ${PATCHLIST}
-    python2 ${SCRIPTS}patchesv2.py $file $MWIDTH $MHEIGHT $MSTRIDE $LHEIGHT ${PATCHES} "_2" $class >> ${PATCHLIST}
-    python2 ${SCRIPTS}patchesv2.py $file $LWIDTH $LHEIGHT $LSTRIDE $LHEIGHT ${PATCHES} "_1" $class >> ${PATCHLIST}
+#     touch $PATCHLIST
+#     python2 ${SCRIPTS}patchesv2.py $file $SWIDTH $SHEIGHT $SSTRIDE $LHEIGHT ${PATCHES} "_3" $class >> ${PATCHLIST}
+#     python2 ${SCRIPTS}patchesv2.py $file $MWIDTH $MHEIGHT $MSTRIDE $LHEIGHT ${PATCHES} "_2" $class >> ${PATCHLIST}
+#     python2 ${SCRIPTS}patchesv2.py $file $LWIDTH $LHEIGHT $LSTRIDE $LHEIGHT ${PATCHES} "_1" $class >> ${PATCHLIST}
     
-    cat $PATCHLIST | grep -o "^[^[:space:]]\+" > $TESTLIST
-    python2 ${SCRIPTS}idonly.py $TESTLIST > $TESTLISTID
-    rm $PATCHLIST
-    rm $class
+#     cat $PATCHLIST | grep -o "^[^[:space:]]\+" > $TESTLIST
+#     python2 ${SCRIPTS}idonly.py $TESTLIST > $TESTLISTID
+#     rm $PATCHLIST
+#     rm $class
     
-    iterations=$(wc -w $TESTLISTID  | grep -o "^[0-9]\+")
+#     iterations=$(wc -w $TESTLISTID  | grep -o "^[0-9]\+")
     
-    for model in $(cat $CAFFEMODELS)
-    do
-        caffe test -model=$PROTOTXT -weights=$model -iterations $iterations -gpu 0
-        modelname=$(basename $model)
-        mv $CNNOUT/* ${PREDICTIONS}${modelname}.d/
-    done
-done
+#     for model in $(cat $CAFFEMODELS)
+#     do
+#         caffe test -model=$PROTOTXT -weights=$model -iterations $iterations -gpu 0
+#         modelname=$(basename $model)
+#         mv $CNNOUT/* ${PREDICTIONS}${modelname}.d/
+#     done
+# done
 
 for model in ${PREDICTIONS}*
 do
     for prediction in $model/*
     do
-        gt=$(basename $prediction | sed 's/leftImg8bit_1_03_blob_0.mat/gtFine_labelIds.png/')
-        python2 ${SCIPTS}evalclass.py $gt $prediction >> ${model}/performance.txt
+        gt=$(basename $prediction | sed 's/_blob_0.mat/_annot.png/')
+        python2 ${SCRIPTS}evalclass.py ${PATCHES}${gt} $prediction >> ${model}/performance.txt
     done
 done
