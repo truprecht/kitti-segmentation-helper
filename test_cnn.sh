@@ -1,3 +1,5 @@
+# bash kitti-segmentation-helper/test_cnn.sh valfiles100.txt cityscapes/gtFine_trainvaltest/gtFine/val/frankfurt/ kitti-segmentation-helper/ snapshots.txt
+
 FILES=$1
 GT=$2
 SCRIPTS=$3
@@ -9,9 +11,11 @@ PROTOTXT="cnn-densecrf-kitti-public/cnn/test.prototxt"
 DATA="temp/"
 PATCHES="${DATA}patches/"
 PATCHLIST="${PATCHES}list.txt"
+PREDICTIONS="${DATA}pred/"
 TESTLIST="test_list.txt"
 TESTLISTID="testlist_id_only.txt"
 mkdir -p $PATCHES
+mkdir -p $PREDICTIONS
 
 SWIDTH=275
 SHEIGHT=330
@@ -40,6 +44,7 @@ do
     cat $PATCHLIST | grep -o "^[^[:space:]]\+" > $TESTLIST
     python2 ${SCRIPTS}idonly.py $TESTLIST > $TESTLISTID
     rm $PATCHLIST
+    rm $class
     
     iterations=$(wc -w $TESTLISTID  | grep -o "^[0-9]\+")
     
@@ -47,6 +52,7 @@ do
     do
         mkdir -p $CNNOUT
         caffe test -model=$PROTOTXT -weights=$model -iterations $iterations -gpu 0
-        mv $CNNOUT ${DATA}${model}.d
+        modelname=$(basename $model)
+        mv $CNNOUT ${PREDICTIONS}${modelname}.d
     done
 done
