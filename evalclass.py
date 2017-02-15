@@ -31,7 +31,7 @@ fn = np.logical_and(np.logical_not(classpred), gt)
 tp_, fp_, fn_ = np.sum(tp), np.sum(fp), np.sum(fn)
 print tp_, fp_, fn_
 
-precision = float(tp_) / (fp_ + tp_)
-recall = float(tp_) / (fn_ + tp_)
+precision = float(tp_) / (fp_ + tp_) if (fp_ + tp_) > 0 else 1
+recall = float(tp_) / (fn_ + tp_) if (fn_ + tp_) > 0 else 1
 
 print "%f, %f" %(precision, recall)
