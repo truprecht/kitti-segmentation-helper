@@ -7,6 +7,7 @@ CAFFEMODELS=$4
 
 CNNOUT="fc8_val3769/"
 PROTOTXT="cnn-densecrf-kitti-public/cnn/test.prototxt"
+mkdir -p $CNNOUT
 
 DATA="temp/"
 PATCHES="${DATA}patches/"
@@ -50,9 +51,17 @@ do
     
     for model in $(cat $CAFFEMODELS)
     do
-        mkdir -p $CNNOUT
         caffe test -model=$PROTOTXT -weights=$model -iterations $iterations -gpu 0
         modelname=$(basename $model)
-        mv $CNNOUT ${PREDICTIONS}${modelname}.d
+        mv $CNNOUT/* ${PREDICTIONS}${modelname}.d/
+    done
+done
+
+for model in ${PREDICTIONS}*
+do
+    for prediction in $model/*
+    do
+        gt=$(basename $prediction | sed 's/leftImg8bit_1_03_blob_0.mat/gtFine_labelIds.png/')
+        python2 evalclass.py $gt $prediction >> ${model}/performance.txt
     done
 done
