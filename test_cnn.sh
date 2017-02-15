@@ -1,3 +1,16 @@
+#!/bin/bash
+
+#SBATCH --time=4:00:00
+#SBATCH --nodes=1
+#SBATCH --gres=gpu:1
+#SBATCH --ntasks=1
+#SBATCH --cpus-per-task=3
+#SBATCH --mem-per-cpu=3000M
+#SBATCH --mail-user=thomas.ruprecht@tu-dresden.de
+#SBATCH --mail-type=END,FAIL
+
+
+
 # bash kitti-segmentation-helper/test_cnn.sh valfiles100.txt cityscapes/gtFine_trainvaltest/gtFine/val/frankfurt/ kitti-segmentation-helper/ snapshots.txt
 
 FILES=$1
@@ -30,6 +43,12 @@ LWIDTH=600
 LHEIGHT=750
 LSTRIDE=120
 
+for model in $(cat $CAFFEMODELS)
+do 
+    modelname=$(basename $model)
+    mkdir ${PREDICTIONS}${modelname}.d
+done
+
 for file in $(cat $FILES)
 do
     annot=$(basename $file | sed 's/leftImg8bit/gtFine_labelIds/')
@@ -48,7 +67,6 @@ do
     rm $class
     
     iterations=$(wc -w $TESTLISTID  | grep -o "^[0-9]\+")
-    mkdir ${PREDICTIONS}${modelname}.d/
     
     for model in $(cat $CAFFEMODELS)
     do
