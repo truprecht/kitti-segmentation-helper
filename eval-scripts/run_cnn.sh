@@ -93,9 +93,9 @@ do
     mkdir -p $locout/small
     mkdir -p $locout/medium
     mkdir -p $locout/large
-    mv "${CNNOUT}*_3_*" $locout/small/
-    mv "${CNNOUT}*_2_*" $locout/medium/
-    mv "${CNNOUT}*_1_*" $locout/large/
+    mv ${CNNOUT}*_3_* $locout/small/
+    mv ${CNNOUT}*_2_* $locout/medium/
+    mv ${CNNOUT}*_1_* $locout/large/
 done
 
 
