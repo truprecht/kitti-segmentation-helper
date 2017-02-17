@@ -34,9 +34,13 @@ tar -xzf $IMAGES
 tar -xzf $PATCHES
 tar -xzf $ROIS
 
-PATCHES=${ROOT}input
-IMAGES=${ROOT}image
-ROIS=${ROOT}roi
+mkdir -p data/input
+mv ${ROOT}image data/
+mv ${ROOT}roi data/
+
+PATCHES=data/input
+IMAGES=data/image
+ROIS=data/roi
 LIST=${PATCHES}/filelist.txt
 
 SCRIPTS=$(path $2)
@@ -57,7 +61,7 @@ mkdir -p $OUT
 # call resample.py <input dir> <resampled width> <resampled height> <output dir>
 # only resamples *.mat files, 
 # output name := basename + .dat, if input name = basename + _blob_0.mat
-for patchset in $PATCHES/*
+for patchset in ${ROOT}input/*
 do
     SWIDTH=275
     SHEIGHT=330
