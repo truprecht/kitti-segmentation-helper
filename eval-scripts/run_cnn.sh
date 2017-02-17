@@ -89,18 +89,20 @@ do
     python2 ${SCRIPTS}idonly.py $PATCHLIST > $PATCHLISTID
     iterations=$(wc -w $PATCHLISTID  | grep -o "^[0-9]\+")
     srun caffe test -model=$PROTOTXT -weights=$CAFFEMOD -iterations $iterations -gpu 0
-    mv $CNNOUT/*_3_* ${CRFINPUT}${IMAGE}/small
-    mv $CNNOUT/*_2_* ${CRFINPUT}${IMAGE}/medium
-    mv $CNNOUT/*_1_* ${CRFINPUT}${IMAGE}/large
+    locout=${CRFINPUT}$(basename $IMAGE)
+    mkdir -p $locout/small
+    mkdir -p $locout/medium
+    mkdir -p $locout/large
+    mv "${CNNOUT}*_3_*" $locout/small/
+    mv "${CNNOUT}*_2_*" $locout/medium/
+    mv "${CNNOUT}*_1_*" $locout/large/
 done
 
 
 # move roi files to densecrf
 mkdir -p $CRFROI
 mv ${DATA}*.txt $CRFROI
-mv ${DATA}*.txt $CRFROI
-mv ${DATA}*.txt $CRFROI
-rm -r ${DATA}
+#rm -r ${DATA}
 
 # move image to densecrf
 mkdir -p $CRFIMAGE
