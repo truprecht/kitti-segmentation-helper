@@ -45,11 +45,11 @@ LIST=${PATCHES}/filelist.txt
 
 SCRIPTS=$(path $2)
 
-if [ -z $4 ]
+if [ -z $3 ]
 then
     OUT="CRFRESULT/"
 else
-    OUT=$(path $4)
+    OUT=$(path $3)
 fi
 
 
@@ -97,9 +97,9 @@ do
     slocpr=0.2 # CNN prediction stddev
     iters=50 # iterations of mean field to run
 
-    echo "begin inference of $IMAGEFILTER $(date)" > timelog.txt 
+    echo "begin inference of $IMAGEFILTER $(date)" >> timelog.txt 
     srun inference -p $LIST -ws ${ws} -wm ${wm} -wl ${wl} -wi ${wi} -sp ${sp} -df ${df} -wc ${wc} -wp ${wp} -sps ${sps} -wcol ${wcol} -wlocc ${wlocc} -wlocp ${wlocp} -slocl ${slocl} -slocpr ${slocpr} -iters ${iters} -o $OUT
-    echo "end inference of $IMAGEFILTER $(date)" > timelog.txt 
+    echo "end inference of $IMAGEFILTER $(date)" >> timelog.txt 
     
     rm $PATCHES/*.dat $LIST
 done
