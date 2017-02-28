@@ -457,7 +457,13 @@ int main(int argc, char** argv) {
             }
             std::sort(sizes.begin(), sizes.end());
             if (sizes.size() != 3) {
-                std::cout << "unexpected patch sizes" << std::endl;
+                std::cout << "unexpected patch sizes:" << std::endl;
+                if (sizes.size() == 0)
+                    std::cout << "no images" << std::endl;
+                else{
+                    for (std::vector<int>::iterator it = sizes.begin(); it != sizes.end(); it++)
+                        std::cout << *it << std::endl;
+                }
                 exit(-1);
             }
             else {
