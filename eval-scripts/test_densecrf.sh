@@ -74,7 +74,7 @@ do
 
     touch $LIST
 
-    if [ $patchset == "*_small.png" ]
+    if [ $patchset == *_small.png ]
     then
         python2 ${SCRIPTS}resample.py $patchset/small $(($SWIDTH/2)) $(($SHEIGHT/2)) $PATCHES
         python2 ${SCRIPTS}resample.py $patchset/medium $(($MWIDTH/2)) $(($MHEIGHT/2)) $PATCHES
