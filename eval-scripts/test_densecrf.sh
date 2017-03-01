@@ -74,7 +74,7 @@ do
 
     touch $LIST
 
-    if [ $patchset == *_small.png ]
+    if [[ $patchset == *_small.png ]]
     then
         echo "resampling small image $patchset" 
         python2 ${SCRIPTS}resample.py $patchset/small $(($SWIDTH/2)) $(($SHEIGHT/2)) $PATCHES
