@@ -72,9 +72,9 @@ do
     touch ${PATCHLIST}
     if [[ $IMAGE == *_small.png ]]
     then
-        python2 ${SCRIPTS}patchesv2.py $IMAGE $(($SWIDTH/2)) $(($SHEIGHT/2)) $(($SSTRIDE/2)) $(($LHEIGHT/2)) ${DATA} "_3" >> ${PATCHLIST}
-        python2 ${SCRIPTS}patchesv2.py $IMAGE $(($MWIDTH/2)) $(($MHEIGHT/2)) $(($MSTRIDE/2)) $(($LHEIGHT/2)) ${DATA} "_2" >> ${PATCHLIST}
-        python2 ${SCRIPTS}patchesv2.py $IMAGE $(($LWIDTH/2)) $(($LHEIGHT/2)) $(($LSTRIDE/2)) $(($LHEIGHT/2)) ${DATA} "_1" >> ${PATCHLIST}
+        python2 ${SCRIPTS}patchesv2.py $IMAGE $(($SWIDTH/4)) $(($SHEIGHT/4)) $(($SSTRIDE/4)) $(($LHEIGHT/4)) ${DATA} "_3" >> ${PATCHLIST}
+        python2 ${SCRIPTS}patchesv2.py $IMAGE $(($MWIDTH/4)) $(($MHEIGHT/4)) $(($MSTRIDE/4)) $(($LHEIGHT/4)) ${DATA} "_2" >> ${PATCHLIST}
+        python2 ${SCRIPTS}patchesv2.py $IMAGE $(($LWIDTH/4)) $(($LHEIGHT/4)) $(($LSTRIDE/4)) $(($LHEIGHT/4)) ${DATA} "_1" >> ${PATCHLIST}
     elif [[ $IMAGE == *_sparse.png ]]
     then
         python2 ${SCRIPTS}patchesv2.py $IMAGE $SWIDTH $SHEIGHT $(($SSTRIDE*2)) $LHEIGHT ${DATA} "_3" >> ${PATCHLIST}

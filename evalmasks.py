@@ -18,7 +18,7 @@ if __name__ == "__main__":
 
     # add zero padding to match original shape
     prediction = np.zeros((oheight, owidth))
-    prediction[oheight-pheight:oheight, owidth-pwidth:pwidth] = prediction_
+    prediction[oheight-pheight:oheight, owidth-pwidth:owidth] = prediction_
 
     for i in np.unique(prediction):
         if i == 0:

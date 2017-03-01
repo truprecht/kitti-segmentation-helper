@@ -77,9 +77,9 @@ do
     if [[ $patchset == *_small.png ]]
     then
         echo "resampling small image $patchset" 
-        python2 ${SCRIPTS}resample.py $patchset/small $(($SWIDTH/2)) $(($SHEIGHT/2)) $PATCHES
-        python2 ${SCRIPTS}resample.py $patchset/medium $(($MWIDTH/2)) $(($MHEIGHT/2)) $PATCHES
-        python2 ${SCRIPTS}resample.py $patchset/large $(($LWIDTH/2)) $(($LHEIGHT/2)) $PATCHES
+        python2 ${SCRIPTS}resample.py $patchset/small $(($SWIDTH/4)) $(($SHEIGHT/4)) $PATCHES
+        python2 ${SCRIPTS}resample.py $patchset/medium $(($MWIDTH/4)) $(($MHEIGHT/4)) $PATCHES
+        python2 ${SCRIPTS}resample.py $patchset/large $(($LWIDTH/4)) $(($LHEIGHT/4)) $PATCHES
     else
         echo "resapling image $patchset"
         python2 ${SCRIPTS}resample.py $patchset/small $SWIDTH $SHEIGHT $PATCHES
