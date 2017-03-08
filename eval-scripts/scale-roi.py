@@ -16,5 +16,6 @@ if __name__ == "__main__":
 
     with open(argv[1]) as roifile:
         oy1, oy2, ox1, ox2 = map(int, roifile.readline().split(" "))
-        print " ".join( map(str, rescale(oy1, oy2, ox1, ox2, int(argv[2]), int(argv[3]))) )
 
+    with open(argv[1], "w") as nfile:
+        nfile.write(" ".join( map(str, rescale(oy1, oy2, ox1, ox2, int(argv[2]), int(argv[3]))) ))
