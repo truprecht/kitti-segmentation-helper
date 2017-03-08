@@ -25,6 +25,19 @@ function path() {
         echo $1
     fi
 }
+
+IMHEIGHT=1024
+IMWIDTH=2048
+
+SWIDTH=275
+SHEIGHT=330
+
+MWIDTH=400
+MHEIGHT=500
+
+LWIDTH=600
+LHEIGHT=750
+
 ROOT=$(path $1)
 IMAGES=${ROOT}image.tar.gz
 PATCHES=${ROOT}input.tar.gz
@@ -52,10 +65,25 @@ else
     OUT=$(path $3)
 fi
 
-
-# run inference
 mkdir -p $OUT
 
+# adapt small images' roi files and scale 'em
+for roi in $ROIS/*_small_1_*.png
+do
+    python ${SCRIPTS}eval-scripts/scale-roi.py $roi $(($LWIDTH/4)) $(($LHEIGHT/4)) > $roi
+done
+for roi in $ROIS/*_small_2_*.png
+do
+    python ${SCRIPTS}eval-scripts/scale-roi.py $roi $(($MWIDTH/4)) $(($MHEIGHT/4)) > $roi
+done
+for roi in $ROIS/*_small_3_*.png
+do
+    python ${SCRIPTS}eval-scripts/scale-roi.py $roi $(($SWIDTH/4)) $(($SHEIGHT/4)) > $roi
+done
+for si in $IMAGES/*_small.png
+do
+    python ${SCRIPTS}eval-scripts/scale-image.py $si $(($IMWIDTH/4)) $(($IMHEIGHT/4)) $si
+done
 
 # resample classifications to original patch size, move w/ to densecrf
 # call resample.py <input dir> <resampled width> <resampled height> <output dir>
@@ -63,14 +91,6 @@ mkdir -p $OUT
 # output name := basename + .dat, if input name = basename + _blob_0.mat
 for patchset in ${ROOT}input/*
 do
-    SWIDTH=275
-    SHEIGHT=330
-
-    MWIDTH=400
-    MHEIGHT=500
-
-    LWIDTH=600
-    LHEIGHT=750
 
     touch $LIST
 

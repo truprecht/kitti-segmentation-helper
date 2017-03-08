@@ -1,13 +1,13 @@
 #!/usr/bin/python2
 
 def rescale(y1, y2, x1, x2, w, h):
-    xscale = float(w) / float(x2 - x1)
-    yscale = float(h) / float(y2 - y1)
+    xscale = float(w) / float(x2 - x1 + 1) # inclusive ranges
+    yscale = float(h) / float(y2 - y1 + 1)
 
-    y1_ = int(round(y1 * yscale))
-    x1_ = int(round(x1 * xscale))
+    y1_ = int((y1 - 1) * yscale)
+    x1_ = int((x1 - 1) * xscale)
 
-    return (y1_, y1_ + h, x1_, x1_ + w)
+    return (y1_ + 1, y1_ + h, x1_ + 1, x1_ + w)
 
 if __name__ == "__main__":
     from sys import argv
