@@ -12,7 +12,7 @@ def rescale(y1, y2, x1, x2, w, h):
 if __name__ == "__main__":
     from sys import argv
 
-    assert len(argv) == 3, "use " + argv[0] + " <roi file> <new width> <new height>"
+    assert len(argv) == 4, "use " + argv[0] + " <roi file> <new width> <new height>"
 
     with open(argv[1]) as roifile:
         oy1, oy2, ox1, ox2 = map(int, roifile.readline().split(" "))
