@@ -8,7 +8,7 @@
 #SBATCH --mail-user=thomas.ruprecht@tu-dresden.de
 #SBATCH --mail-type=END,FAIL
 
-export OMP_NUM_THREADS=12
+export OMP_NUM_THREADS=24
 
 
 if [ -z $1 ]
@@ -66,9 +66,27 @@ LHEIGHT=750
 
 touch $LIST
 
-python2 ${SCRIPTS}resample.py $PATCHES/small $SWIDTH $SHEIGHT $PATCHES
-python2 ${SCRIPTS}resample.py $PATCHES/medium $MWIDTH $MHEIGHT $PATCHES
-python2 ${SCRIPTS}resample.py $PATCHES/large $LWIDTH $LHEIGHT $PATCHES
+python2 ${SCRIPTS}resample.py $PATCHES/small $(($SWIDTH/4)) $(($SHEIGHT/4)) $PATCHES
+python2 ${SCRIPTS}resample.py $PATCHES/medium $(($MWIDTH/4)) $(($MHEIGHT/4)) $PATCHES
+python2 ${SCRIPTS}resample.py $PATCHES/large $(($LWIDTH/4)) $(($LHEIGHT/4)) $PATCHES
+
+for im in $IMAGES/*
+do
+    python2 ${SCRIPTS}eval-scripts/scale-image.py $im 512 256 $im
+done
+for roi in $ROIS/*
+do
+    if [[ $roi == *_1_*.txt ]]
+    then
+        python2 ${SCRIPTS}eval-scripts/scale-roi.py $roi $(($LWIDTH/4)) $(($LHEIGHT/4))
+    elif [[ $roi == *_2_*.txt ]]
+    then
+        python2 ${SCRIPTS}eval-scripts/scale-roi.py $roi $(($MWIDTH/4)) $(($MHEIGHT/4))
+    elif [[ $roi == *_3_*.txt ]]
+    then
+        python2 ${SCRIPTS}eval-scripts/scale-roi.py $roi $(($SWIDTH/4)) $(($SHEIGHT/4))
+    fi
+done
 
 # run inference
 mkdir -p $OUT
@@ -89,3 +107,8 @@ iters=50 # iterations of mean field to run
 srun inference -p $LIST -ws ${ws} -wm ${wm} -wl ${wl} -wi ${wi} -sp ${sp} -df ${df} -wc ${wc} -wp ${wp} -sps ${sps} -wcol ${wcol} -wlocc ${wlocc} -wlocp ${wlocp} -slocl ${slocl} -slocpr ${slocpr} -iters ${iters} -o $OUT
 
 rm -r $PATCHES $IMAGES $ROIS
+
+for lbl in ${OUT}*
+do
+    python2 ${SCRIPTS}eval-scripts/scale-labels.py $lbl 256 2048 1024 $lbl
+done
