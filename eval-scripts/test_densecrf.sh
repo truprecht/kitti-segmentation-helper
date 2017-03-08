@@ -70,15 +70,15 @@ mkdir -p $OUT
 # adapt small images' roi files and scale 'em
 for roi in $ROIS/*_small_1_*.txt
 do
-    python ${SCRIPTS}eval-scripts/scale-roi.py $roi $(($LWIDTH/4)) $(($LHEIGHT/4)) > $roi
+    python ${SCRIPTS}eval-scripts/scale-roi.py $roi $(($LWIDTH/4)) $(($LHEIGHT/4))
 done
 for roi in $ROIS/*_small_2_*.txt
 do
-    python ${SCRIPTS}eval-scripts/scale-roi.py $roi $(($MWIDTH/4)) $(($MHEIGHT/4)) > $roi
+    python ${SCRIPTS}eval-scripts/scale-roi.py $roi $(($MWIDTH/4)) $(($MHEIGHT/4))
 done
 for roi in $ROIS/*_small_3_*.txt
 do
-    python ${SCRIPTS}eval-scripts/scale-roi.py $roi $(($SWIDTH/4)) $(($SHEIGHT/4)) > $roi
+    python ${SCRIPTS}eval-scripts/scale-roi.py $roi $(($SWIDTH/4)) $(($SHEIGHT/4))
 done
 for si in $IMAGES/*_small.png
 do
