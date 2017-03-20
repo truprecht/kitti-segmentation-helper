@@ -6,7 +6,9 @@ from sys import argv
 
 if __name__ == "__main__":
     assert len(argv) == 5, \
-        "use " + argv[0] + " <prediction> <orig. width> <orig. height> <output folder>"
+        """Extract a binary mask for every grayscale value of the input image.
+        The masks are zero-padded to fit an original shape."
+        Use """ + argv[0] + """ <prediction> <orig. width> <orig. height> <output folder>"""
 
     ofolder = argv[4] if argv[4][-1] == "/" else argv + "/"
     filename = argv[1].split("/")[-1].split(".")[0]

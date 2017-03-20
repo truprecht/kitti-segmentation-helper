@@ -67,9 +67,9 @@ touch ${PATCHLIST}_small ${PATCHLIST}_medium ${PATCHLIST}_large
 
 for IMAGE in $(cat $IMAGELIST)
 do
-    python2 ${SCRIPTS}patchesv2.py $IMAGE $SWIDTH $SHEIGHT $SSTRIDE $LHEIGHT ${DATA}small "_3" >> ${PATCHLIST}_small
-    python2 ${SCRIPTS}patchesv2.py $IMAGE $MWIDTH $MHEIGHT $MSTRIDE $LHEIGHT ${DATA}medium "_2" >> ${PATCHLIST}_medium
-    python2 ${SCRIPTS}patchesv2.py $IMAGE $LWIDTH $LHEIGHT $LSTRIDE $LHEIGHT ${DATA}large "_1" >> ${PATCHLIST}_large
+    python2 ${SCRIPTS}tools/patchesv2.py $IMAGE $SWIDTH $SHEIGHT $SSTRIDE $LHEIGHT ${DATA}small "_3" >> ${PATCHLIST}_small
+    python2 ${SCRIPTS}tools/patchesv2.py $IMAGE $MWIDTH $MHEIGHT $MSTRIDE $LHEIGHT ${DATA}medium "_2" >> ${PATCHLIST}_medium
+    python2 ${SCRIPTS}tools/patchesv2.py $IMAGE $LWIDTH $LHEIGHT $LSTRIDE $LHEIGHT ${DATA}large "_1" >> ${PATCHLIST}_large
 done
 
 mkdir -p $CRFINPUT
@@ -81,7 +81,7 @@ do
     mkdir -p $CNNOUT
 
     cp ${PATCHLIST}_${size} $PATCHLIST
-    python2 ${SCRIPTS}idonly.py $PATCHLIST > $PATCHLISTID
+    cat $PATCHLIST | sed 's:\.png::g' | sed 's:[^ ]*/::g' > $PATCHLISTID
     # count files listed in test_list_id_only.txt
     iterations=$(wc -w $PATCHLISTID  | grep -o "^[0-9]\+")
     srun caffe test -model=$PROTOTXT -weights=$CAFFEMOD -iterations $iterations -gpu 0

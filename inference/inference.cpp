@@ -354,7 +354,7 @@ int main(int argc, char** argv) {
     std::cout << "Number of images after removing already existed: " << imagePatchMappings.size() << std::endl;
 
 #ifndef __APPLE__
-    //omp_set_num_threads(2);
+    omp_set_num_threads(2);
 #pragma omp parallel for
 #endif
     for (int x = ClusterID; x < int(imagePatchMappings.size()); x+=ClusterSize) {

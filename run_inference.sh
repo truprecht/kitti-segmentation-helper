@@ -66,25 +66,25 @@ LHEIGHT=750
 
 touch $LIST
 
-python2 ${SCRIPTS}resample.py $PATCHES/small $(($SWIDTH/4)) $(($SHEIGHT/4)) $PATCHES
-python2 ${SCRIPTS}resample.py $PATCHES/medium $(($MWIDTH/4)) $(($MHEIGHT/4)) $PATCHES
-python2 ${SCRIPTS}resample.py $PATCHES/large $(($LWIDTH/4)) $(($LHEIGHT/4)) $PATCHES
+python2 ${SCRIPTS}tools/resample.py $PATCHES/small $(($SWIDTH/4)) $(($SHEIGHT/4)) $PATCHES
+python2 ${SCRIPTS}tools/resample.py $PATCHES/medium $(($MWIDTH/4)) $(($MHEIGHT/4)) $PATCHES
+python2 ${SCRIPTS}tools/resample.py $PATCHES/large $(($LWIDTH/4)) $(($LHEIGHT/4)) $PATCHES
 
 for im in $IMAGES/*
 do
-    python2 ${SCRIPTS}eval-scripts/scale-image.py $im 512 256 $im
+    python2 ${SCRIPTS}tools/scale-image.py $im 512 256 $im
 done
 for roi in $ROIS/*
 do
     if [[ $roi == *_1_*.txt ]]
     then
-        python2 ${SCRIPTS}eval-scripts/scale-roi.py $roi $(($LWIDTH/4)) $(($LHEIGHT/4))
+        python2 ${SCRIPTS}tools/scale-roi.py $roi $(($LWIDTH/4)) $(($LHEIGHT/4))
     elif [[ $roi == *_2_*.txt ]]
     then
-        python2 ${SCRIPTS}eval-scripts/scale-roi.py $roi $(($MWIDTH/4)) $(($MHEIGHT/4))
+        python2 ${SCRIPTS}tools/scale-roi.py $roi $(($MWIDTH/4)) $(($MHEIGHT/4))
     elif [[ $roi == *_3_*.txt ]]
     then
-        python2 ${SCRIPTS}eval-scripts/scale-roi.py $roi $(($SWIDTH/4)) $(($SHEIGHT/4))
+        python2 ${SCRIPTS}tools/scale-roi.py $roi $(($SWIDTH/4)) $(($SHEIGHT/4))
     fi
 done
 
@@ -110,5 +110,5 @@ rm -r $PATCHES $IMAGES $ROIS
 
 for lbl in ${OUT}*
 do
-    python2 ${SCRIPTS}eval-scripts/scale-labels.py $lbl 256 2048 1024 $lbl
+    python2 ${SCRIPTS}tools/scale-labels.py $lbl 256 2048 1024 $lbl
 done
