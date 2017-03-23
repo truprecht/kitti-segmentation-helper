@@ -15,7 +15,7 @@ i=1
 for prediction in ${PRfolder}*.png
 do
     pname=$(basename $prediction | sed 's/.png//')
-    python2 evalmasks.py $prediction 2048 1024 $Mfolder > ${Mfolder}${pname}.txt
+    python2 ../tools/evalmasks.py $prediction 2048 1024 $Mfolder > ${Mfolder}${pname}.txt
     echo "done $i / $predictions"
     i=$(($i+1))
 done
