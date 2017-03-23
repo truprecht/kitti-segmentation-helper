@@ -1,6 +1,6 @@
 #!/bin/bash
 
-#SBATCH --time=2:00:00
+#SBATCH --time=4:00:00
 #SBATCH --nodes=1
 #SBATCH --ntasks=1
 #SBATCH --cpus-per-task=1
@@ -61,6 +61,7 @@ python2 $RSMPL $PATCHES/large $(($LWIDTH/4)) $(($LHEIGHT/4)) $PATCHES
 for im in $IMAGES/*
 do
     python2 $SCLIMG $im 512 256 $im
+    echo "resized image $im"
 done
 for roi in $ROIS/*
 do
@@ -74,4 +75,5 @@ do
     then
         python2 $SCLROI $roi $(($SWIDTH/4)) $(($SHEIGHT/4))
     fi
+    echo "rescaled roi $roi"
 done
