@@ -36,9 +36,9 @@ tar -xzf $IMAGES
 tar -xzf $PATCHES
 tar -xzf $ROIS
 
-PATCHES=${ROOT}input
-IMAGES=${ROOT}image
-ROIS=${ROOT}roi
+PATCHES=${DATA}input
+IMAGES=${DATA}image
+ROIS=${DATA}roi
 LIST=${PATCHES}/filelist.txt
 
 
