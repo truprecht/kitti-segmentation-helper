@@ -30,21 +30,21 @@ DATA=$(path $1)
 TOOLS=$(path $2)
 if [ -z $3 ]; then OUT="./"; else OUT=$(path $3); fi
 
-RAND="python ${TOOLS}tools/randn.py"
-RESCALE="python ${TOOLS}tools/scale-labels.py"
+RAND="${TOOLS}tools/randn.py"
+RESCALE="${TOOLS}tools/scale-labels.py"
 
 # randomize parameters
-wl=$("$RAND 1 0.2")     # weight for local CNN prediction term (large patches)
-wm=$("$RAND 1.7 0.5")   # weight for local CNN prediction term (medium patches)
-ws=$("$RAND 1.7 0.5")   # weight for local CNN prediction term (small patches)
-sp=$("$RAND 0.1 0.02")  # stddev in the kernel
+wl=$(python $RAND 1 0.2)     # weight for local CNN prediction term (large patches)
+wm=$(python $RAND 1.7 0.5)   # weight for local CNN prediction term (medium patches)
+ws=$(python $RAND 1.7 0.5)   # weight for local CNN prediction term (small patches)
+sp=$(python $RAND 0.1 0.02)  # stddev in the kernel
 
-wi=$("$RAND 12 2")      # weight for inter-connected component term
-df=$("$RAND 0.6 0.1")   # threshold for obtaining foreground map
+wi=$(python $RAND 12 2)      # weight for inter-connected component term
+df=$(python $RAND 0.6 0.1)   # threshold for obtaining foreground map
 
-wlocc=$("$RAND 1.7 0.5")    # weight for smoothness term
-slocl=$("$RAND 80 10")      # spatial stddev
-slocpr=$("$RAND 0.2 0.04")     # CNN prediction stddev
+wlocc=$(python $RAND 1.7 0.5)    # weight for smoothness term
+slocl=$(python $RAND 80 10)      # spatial stddev
+slocpr=$(python $RAND 0.2 0.04)     # CNN prediction stddev
 iters=50                    # iterations of mean field to run
 
 CONFIG="inference-${wl}-${wm}-${ws}-${sp}-${wi}-${df}-${wlocc}-${slocl}-${slocpr}"
@@ -60,5 +60,5 @@ srun inference -p ${DATA}input/filelist.txt -ws ${ws} -wm ${wm} -wl ${wl} -wi ${
 
 for lbl in ${OUT}${CONFIG}/*
 do
-    $RESCALE $lbl 256 2048 1024 $lbl
+    python $RESCALE $lbl 256 2048 1024 $lbl
 done
