@@ -56,7 +56,7 @@ fi
 
 mkdir -p "${OUT}${CONFIG}"
 
-srun inference -p ${DATA}input/filelist.txt -ws ${ws} -wm ${wm} -wl ${wl} -wi ${wi} -sp ${sp} -df ${df} -wlocc ${wlocc} -slocl ${slocl} -slocpr ${slocpr} -iters ${iters} -o "${OUT}${CONFIG}"
+srun inference -p ${DATA}input/filelist.txt -ws ${ws} -wm ${wm} -wl ${wl} -wi ${wi} -sp ${sp} -df ${df} -wlocc ${wlocc} -slocl ${slocl} -slocpr ${slocpr} -iters ${iters} -o "${OUT}${CONFIG}/"
 
 for lbl in ${OUT}${CONFIG}/*
 do
