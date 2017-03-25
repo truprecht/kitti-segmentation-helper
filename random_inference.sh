@@ -8,7 +8,7 @@
 #SBATCH --mail-user=thomas.ruprecht@tu-dresden.de
 #SBATCH --mail-type=END,FAIL
 
-export OMP_NUM_THREADS=24
+export OMP_NUM_THREADS=48
 
 
 if [ -z $1 ]
