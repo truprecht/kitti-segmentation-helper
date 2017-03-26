@@ -20,7 +20,7 @@ function path() {
 cs=$(path $1)
 tools=$(path $2)
 pred=$(path $3)
-evalscript=$(path $4)
+evalscript=$4
 
 masks="temp/masks-$(basename $pred)/"
 
