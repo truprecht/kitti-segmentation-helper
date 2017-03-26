@@ -20,24 +20,27 @@ function path() {
 cs=$(path $1)
 tools=$(path $2)
 pred=$(path $3)
-masks=$(path $4)
-evalscript=$(path $5)
+evalscript=$(path $4)
 
-mkdir -p ${Mfolder}
+masks="temp/masks-$(basename $pred)/"
+
+mkdir -p ${masks}
 
 echo "cutting binary masks for images"
-predictions=$(ls $PRfolder | wc | grep -o "^[^0-9]*[0-9]\+" | grep -o "[0-9]\+")
+predictions=$(ls $pred | wc | grep -o "^[^0-9]*[0-9]\+" | grep -o "[0-9]\+")
 i=1
 
-for prediction in ${PRfolder}*.png
+for prediction in ${pred}*.png
 do
     pname=$(basename $prediction | sed 's/.png//')
-    python2 ${tools}tools/evalmasks.py $prediction 2048 1024 $Mfolder > ${Mfolder}${pname}.txt
+    python2 ${tools}tools/evalmasks.py $prediction 2048 1024 $masks > ${masks}${pname}.txt
     echo "done $i / $predictions"
     i=$(($i+1))
 done
 
-export CITYSCAPES_DATASET=$CSROOT
-export CITYSCAPES_RESULTS=$Mfolder
+export CITYSCAPES_DATASET=$cs
+export CITYSCAPES_RESULTS=$masks
 
 python $evalscript > "$(basename $pred).performance"
+
+rm -r $masks
