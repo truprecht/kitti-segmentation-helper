@@ -4,7 +4,7 @@
 #SBATCH --nodes=1
 #SBATCH --ntasks=1
 #SBATCH --cpus-per-task=24
-#SBATCH --mem-per-cpu=10583M
+#SBATCH --mem-per-cpu=2583M
 #SBATCH --mail-user=thomas.ruprecht@tu-dresden.de
 #SBATCH --mail-type=END,FAIL
 
