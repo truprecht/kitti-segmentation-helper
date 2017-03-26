@@ -1,10 +1,27 @@
 #!/bin/bash
 
-CSROOT=$1
-PRfolder=$2
-Mfolder=$3
+#SBATCH --time=3:00:00
+#SBATCH --nodes=1
+#SBATCH --ntasks=1
+#SBATCH --cpus-per-task=1
+#SBATCH --mem-per-cpu=10583M
+#SBATCH --mail-user=thomas.ruprecht@tu-dresden.de
+#SBATCH --mail-type=END,FAIL
 
-evalscript=$4
+function path() {
+    if [ "${1: -1}" != "/" ]
+    then
+        echo $1/
+    else
+        echo $1
+    fi
+}
+
+cs=$(path $1)
+tools=$(path $2)
+pred=$(path $3)
+masks=$(path $4)
+evalscript=$(path $5)
 
 mkdir -p ${Mfolder}
 
@@ -15,7 +32,7 @@ i=1
 for prediction in ${PRfolder}*.png
 do
     pname=$(basename $prediction | sed 's/.png//')
-    python2 ../tools/evalmasks.py $prediction 2048 1024 $Mfolder > ${Mfolder}${pname}.txt
+    python2 ${tools}tools/evalmasks.py $prediction 2048 1024 $Mfolder > ${Mfolder}${pname}.txt
     echo "done $i / $predictions"
     i=$(($i+1))
 done
@@ -23,4 +40,4 @@ done
 export CITYSCAPES_DATASET=$CSROOT
 export CITYSCAPES_RESULTS=$Mfolder
 
-python $evalscript
+python $evalscript > "$(basename $pred).performance"
