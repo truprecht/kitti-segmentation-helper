@@ -3,7 +3,7 @@
 #SBATCH --time=3:00:00
 #SBATCH --nodes=1
 #SBATCH --ntasks=1
-#SBATCH --cpus-per-task=1
+#SBATCH --cpus-per-task=24
 #SBATCH --mem-per-cpu=10583M
 #SBATCH --mail-user=thomas.ruprecht@tu-dresden.de
 #SBATCH --mail-type=END,FAIL
@@ -33,10 +33,14 @@ i=1
 for prediction in ${pred}*.png
 do
     pname=$(basename $prediction | sed 's/.png//')
-    python2 ${tools}tools/evalmasks.py $prediction 2048 1024 $masks > ${masks}${pname}.txt
-    echo "done $i / $predictions"
+    python2 ${tools}tools/evalmasks.py $prediction 2048 1024 $masks > ${masks}${pname}.txt &
+    echo "started $i / $predictions"
     i=$(($i+1))
 done
+
+echo "waiting $(date)..."
+wait
+echo "done $(date)"
 
 export CITYSCAPES_DATASET=$cs
 export CITYSCAPES_RESULTS=$masks
