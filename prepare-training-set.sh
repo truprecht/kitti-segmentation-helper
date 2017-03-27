@@ -1,5 +1,16 @@
 #!/bin/bash
 
+#SBATCH --time=24:00:00
+#SBATCH --nodes=1
+#SBATCH --ntasks=1
+#SBATCH --cpus-per-task=24
+#SBATCH --mem-per-cpu=2583M
+#SBATCH --mail-user=thomas.ruprecht@tu-dresden.de
+#SBATCH --mail-type=END,FAIL
+
+export OMP_NUM_THREADS=24
+
+
 if [ -z $1 ] || [ -z $2 ] || [ -z $3 ] || [ -z $4 ]
 then
     echo "use $0 <image folder> <annotation folder> <output folder> <output list> [<working dir>] [<statistics file>]"
@@ -60,7 +71,7 @@ do
 done
 
 if ! [[ -z $6 ]]; then
-    for annotfile in ${OUT}/*_gtFine_instanceTrainIds*; do
+    for annotfile in ${OUT}/*annot.png; do
         echo "$annotfile $(python2 ${SCRIPTS}uniques.py $annotfile)" >> $6
     done
 fi
