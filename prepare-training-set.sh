@@ -55,23 +55,31 @@ mkdir -p $3
 rm $4
 touch $4
 
+threads=0
+
 for folder in ${IMAGES}*
 do
     cf="$(basename $folder)/"
     for image in ${folder}/*
     do
+        if [[ -ge $threads $(($OMP_NUM_THREADS - 2)) ]]; then
+            wait
+            threads=0
+        fi
+        threads=$(($threads + 3))
         annot=${LABELS}${cf}$(basename $image | sed 's/_leftImg8bit/_gtFine_instanceTrainIds/')
-
-        echo "cutting $image / $annot"
-        
-        python2 ${SCRIPTS}patchesv2.py $image $SWIDTH $SHEIGHT $SSTRIDE $LHEIGHT ${OUT} _3 $annot >> $4
-        python2 ${SCRIPTS}patchesv2.py $image $MWIDTH $MHEIGHT $MSTRIDE $LHEIGHT ${OUT} _2 $annot >> $4
-        python2 ${SCRIPTS}patchesv2.py $image $LWIDTH $LHEIGHT $LSTRIDE $LHEIGHT ${OUT} _1 $annot >> $4
+        python2 ${SCRIPTS}patchesv2.py $image $SWIDTH $SHEIGHT $SSTRIDE $LHEIGHT ${OUT} _3 $annot &
+        python2 ${SCRIPTS}patchesv2.py $image $MWIDTH $MHEIGHT $MSTRIDE $LHEIGHT ${OUT} _2 $annot &
+        python2 ${SCRIPTS}patchesv2.py $image $LWIDTH $LHEIGHT $LSTRIDE $LHEIGHT ${OUT} _1 $annot &
     done
 done
 
+for annot in ${OUT}*_annot.png; do
+    echo "$(echo $annot | sed 's/_annot//') $annot" >> $4
+done
+
 if ! [[ -z $6 ]]; then
-    for annotfile in ${OUT}/*annot.png; do
+    for annotfile in ${OUT}*_annot.png; do
         echo "$annotfile $(python2 ${SCRIPTS}uniques.py $annotfile)" >> $6
     done
 fi
