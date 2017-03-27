@@ -62,7 +62,7 @@ do
     cf="$(basename $folder)/"
     for image in ${folder}/*
     do
-        if [[ -ge $threads $(($OMP_NUM_THREADS - 2)) ]]; then
+        if [ $threads -ge $(($OMP_NUM_THREADS - 2)) ]; then
             wait
             threads=0
         fi
