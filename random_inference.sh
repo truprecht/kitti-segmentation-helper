@@ -4,7 +4,7 @@
 #SBATCH --nodes=1
 #SBATCH --ntasks=1
 #SBATCH --cpus-per-task=24
-#SBATCH --mem-per-cpu=10583M
+#SBATCH --mem-per-cpu=2583M
 #SBATCH --mail-user=thomas.ruprecht@tu-dresden.de
 #SBATCH --mail-type=END,FAIL
 
@@ -34,17 +34,17 @@ RAND="${TOOLS}tools/randn.py"
 RESCALE="${TOOLS}tools/scale-labels.py"
 
 # randomize parameters
-wl=$(python $RAND 1 0.2)     # weight for local CNN prediction term (large patches)
-wm=$(python $RAND 1.7 0.5)   # weight for local CNN prediction term (medium patches)
-ws=$(python $RAND 1.7 0.5)   # weight for local CNN prediction term (small patches)
-sp=$(python $RAND 0.1 0.02)  # stddev in the kernel
+wl=$(python $RAND 1 0.3)     # weight for local CNN prediction term (large patches)
+wm=$(python $RAND 1.7 1)   # weight for local CNN prediction term (medium patches)
+ws=$(python $RAND 1.7 1)   # weight for local CNN prediction term (small patches)
+sp=$(python $RAND 0.1 0.05)  # stddev in the kernel
 
-wi=$(python $RAND 12 2)      # weight for inter-connected component term
-df=$(python $RAND 0.6 0.1)   # threshold for obtaining foreground map
+wi=$(python $RAND 12 6)      # weight for inter-connected component term
+df=$(python $RAND 0.6 0.3)   # threshold for obtaining foreground map
 
-wlocc=$(python $RAND 1.7 0.5)    # weight for smoothness term
-slocl=$(python $RAND 80 10)      # spatial stddev
-slocpr=$(python $RAND 0.2 0.04)     # CNN prediction stddev
+wlocc=$(python $RAND 1.7 1)    # weight for smoothness term
+slocl=$(python $RAND 80 20)      # spatial stddev
+slocpr=$(python $RAND 0.2 0.1)     # CNN prediction stddev
 iters=50                    # iterations of mean field to run
 
 CONFIG="inference-${wl}-${wm}-${ws}-${sp}-${wi}-${df}-${wlocc}-${slocl}-${slocpr}"
