@@ -2,7 +2,7 @@
 
 if [ -z $1 ] || [ -z $2 ] || [ -z $3 ] || [ -z $4 ]
 then
-    echo "use $0 <image folder> <annotation folder> <output folder> <output list> [<working dir>]"
+    echo "use $0 <image folder> <annotation folder> <output folder> <output list> [<working dir>] [<statistics file>]"
     exit 1
 fi
 
@@ -51,8 +51,16 @@ do
     do
         annot=${LABELS}${cf}$(basename $image | sed 's/_leftImg8bit/_gtFine_instanceTrainIds/')
 
+        echo "cutting $image / $annot"
+        
         python2 ${SCRIPTS}patchesv2.py $image $SWIDTH $SHEIGHT $SSTRIDE $LHEIGHT ${OUT} _3 $annot >> $4
         python2 ${SCRIPTS}patchesv2.py $image $MWIDTH $MHEIGHT $MSTRIDE $LHEIGHT ${OUT} _2 $annot >> $4
         python2 ${SCRIPTS}patchesv2.py $image $LWIDTH $LHEIGHT $LSTRIDE $LHEIGHT ${OUT} _1 $annot >> $4
     done
 done
+
+if ! [[ -z $6 ]]; then
+    for annotfile in ${OUT}/*_gtFine_instanceTrainIds*; do
+        echo "$annotfile $(python2 ${SCRIPTS}uniques.py $annotfile)" >> $6
+    done
+fi
