@@ -1,5 +1,4 @@
 #!/bin/bash
-# execute in project root, expect subfolders ./cnn
 
 if [ -z $1 ] || [ -z $2 ] || [ -z $3 ] || [ -z $4 ]
 then
@@ -47,13 +46,14 @@ touch $4
 
 for folder in ${IMAGES}*
 do
-    for image in ${IMAGES}${folder}/*
+    cf="$(basename $folder)/"
+    for image in ${folder}/*
     do
         image=$(basename $image)
         annot=$(echo $image | sed 's/_leftImg8bit/_gtFine_instanceTrainIds/')
 
-        python2 ${SCRIPTS}patchesv2.py ${IMAGES}$image $SWIDTH $SHEIGHT $SSTRIDE $LHEIGHT ${OUT} _3 ${LABELS}$annot >> $4
-        python2 ${SCRIPTS}patchesv2.py ${IMAGES}$image $MWIDTH $MHEIGHT $MSTRIDE $LHEIGHT ${OUT} _2 ${LABELS}$annot >> $4
-        python2 ${SCRIPTS}patchesv2.py ${IMAGES}$image $LWIDTH $LHEIGHT $LSTRIDE $LHEIGHT ${OUT} _1 ${LABELS}$annot >> $4
+        python2 ${SCRIPTS}patchesv2.py $image $SWIDTH $SHEIGHT $SSTRIDE $LHEIGHT ${OUT} _3 ${LABELS}${cf}${annot} >> $4
+        python2 ${SCRIPTS}patchesv2.py $image $MWIDTH $MHEIGHT $MSTRIDE $LHEIGHT ${OUT} _2 ${LABELS}${cf}${annot} >> $4
+        python2 ${SCRIPTS}patchesv2.py $image $LWIDTH $LHEIGHT $LSTRIDE $LHEIGHT ${OUT} _1 ${LABELS}${cf}${annot} >> $4
     done
 done
