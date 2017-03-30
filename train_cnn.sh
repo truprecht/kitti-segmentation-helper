@@ -25,4 +25,4 @@ if [ -z $1 ] || [ -z $2 ]; then
     exit 1
 fi
 
-srun caffe train -solver=$1 -weights=$2 -gpu 0 2>&1 | tee "$3.$(date).log"
+srun caffe train -solver=$1 -weights=$2 -gpu 0 2>&1 > "$3.$(date).log"
