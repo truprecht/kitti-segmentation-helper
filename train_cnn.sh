@@ -21,8 +21,8 @@ function path() {
 }
 
 if [ -z $1 ] || [ -z $2 ]; then
-    echo "Use $0 <solver file> <initial weight file>"
+    echo "Use $0 <solver file> <initial weight file> <logfile>"
     exit 1
 fi
 
-srun caffe train -solver=$1 -weights=$2 -gpu 0
+srun caffe train -solver=$1 -weights=$2 -gpu 0 2>&1 | tee "$3.$(date).log"
