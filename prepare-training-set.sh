@@ -79,7 +79,8 @@ for annot in ${OUT}*_annot.png; do
 done
 
 if ! [[ -z $6 ]]; then
-    for annotfile in ${OUT}*_annot.png; do
-        echo "$annotfile $(python2 ${SCRIPTS}uniques.py $annotfile)" >> $6
-    done
+    python2 ${SCRIPTS}uniques-parallell.py "${OUT}*_annot.png"
+    #for annotfile in ${OUT}*_annot.png; do
+    #    echo "$annotfile $(python2 ${SCRIPTS}uniques.py $annotfile)" >> $6
+    #done
 fi
