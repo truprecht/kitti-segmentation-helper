@@ -20,10 +20,15 @@ function path() {
     fi
 }
 
-if [ -z $1 ] || [ -z $2 ]; then
-    echo "Use $0 <solver file> <initial weight file> [<solverstate>] [<logfile>]"
+function help(){
+    echo "Use $0 <solver file> (init|snap) <solverstate / weights file> [<logfile>]"
+}
+
+if [ -z $1 ] || [ -z $2 ] || [ -z $3 ]; then
+    echo $(help)
     exit 1
 fi
+
 if [ -z $4 ]; then
     logfile="caffe.log"
 else
@@ -39,8 +44,11 @@ if [ -e $logfile ]; then
     logfile="$logfile.$i"
 fi
 
-if [ -z $3 ]; then
-    srun caffe train -solver=$1 -weights=$2 -gpu 0 > "$logfile"
+if [ "$2" == "init" ]; then
+    srun caffe train -solver=$1 -weights=$3 -gpu 0 > "$logfile"
+elif [ "$2" == "snap" ]; then
+    srun caffe train -solver=$1 -snapshot=$3 -gpu 0 > "$logfile"
 else
-    srun caffe train -solver=$1 -weights=$2 -snapshot=$3 -gpu 0 > "$logfile"
+    echo $(help)
+    exit 1
 fi
