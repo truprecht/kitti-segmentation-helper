@@ -21,8 +21,26 @@ function path() {
 }
 
 if [ -z $1 ] || [ -z $2 ]; then
-    echo "Use $0 <solver file> <initial weight file> <logfile>"
+    echo "Use $0 <solver file> <initial weight file> [<solverstate>] [<logfile>]"
     exit 1
 fi
+if [ -z $4 ]; then
+    logfile="caffe.log"
+else
+    logfile=$4
+fi
 
-srun caffe train -solver=$1 -weights=$2 -gpu 0 2>&1 > "$3.$(date).log"
+
+if [ -e $logfile ]; then
+    i=1
+    while [ -e "$logfile.$i" ]; do
+        i=$(($i + 1))
+    done
+    logfile="$logfile.$i"
+fi
+
+if [ -z $3 ]; then
+    srun caffe train -solver=$1 -weights=$2 -gpu 0 > "$logfile"
+else
+    srun caffe train -solver=$1 -weights=$2 -snapshot=$3 -gpu 0 > "$logfile"
+fi
