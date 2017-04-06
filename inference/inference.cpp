@@ -29,9 +29,9 @@
 #include "densecrf.h"
 #include "connected.h"
 
-#define IMAGE_FOLDER "data/image"
-#define UNARY_FOLDER "data/input"
-#define ROI_FOLDER "data/roi"
+#define IMAGE_FOLDER "/tmp/image"
+#define UNARY_FOLDER "/tmp/input"
+#define ROI_FOLDER "/tmp/roi"
 
 #ifdef _MSC_VER
 #define DELIM_FOLDER "\\"

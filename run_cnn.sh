@@ -19,28 +19,31 @@ function path() {
     fi
 }
 
-if [ -z $1 ] || [ -z $2 ] || [ -z $3 ] || [ -z $4 ]
-then
-    echo "use $0 <project root> <image list> <scripts> <output folder>"
+if [ -z $1 ]; then
+    echo "use $0 <image list> [<output folder>]"
     exit 1
 fi
+if [ -z $2 ]; then
+    OUT="./"
+else
+    OUT=$(path $2)
+fi
 
-ROOT=$(path $1)
-IMAGELIST=$2
-SCRIPTS=$(path $3)
-OUT=$(path $4)
+IMAGELIST=$1
 
-PROTOTXT="${ROOT}cnn/test.prototxt"
-CAFFEMOD="${ROOT}cnn/cityscapes.caffemodel"
+SCRIPTS="kitti-segmentation-helper/"
 
-DATA="temp/"
-CNNOUT="fc8_val3769/"
+PROTOTXT="cnn/test.prototxt"
+CAFFEMOD="cnn/cityscapes.caffemodel"
+
+DATA="/tmp/"
+CNNOUT="/tmp/fc8_val3769/"
 PATCHLIST="test_list.txt"
 PATCHLISTID="test_list_id_only.txt"
 
-CRFINPUT="${OUT}input/"
-CRFROI="${OUT}roi/"
-CRFIMAGE="${OUT}image/"
+CRFINPUT="${DATA}input/"
+CRFROI="${DATA}roi/"
+CRFIMAGE="${DATA}image/"
 
 SWIDTH=275
 SHEIGHT=330
@@ -105,9 +108,9 @@ do
     cp $IMAGE $CRFIMAGE
 done
 
-tar -czf ${OUT}input.tar.gz $CRFINPUT
+tar -czf "${OUT}input.tar.gz" "$CRFINPUT"
 rm -r $CRFINPUT
-tar -czf ${OUT}image.tar.gz $CRFIMAGE
+tar -czf "${OUT}image.tar.gz" "$CRFIMAGE"
 rm -r $CRFIMAGE
-tar -czf ${OUT}roi.tar.gz $CRFROI
+tar -czf "${OUT}roi.tar.gz" "$CRFROI"
 rm -r $CRFROI

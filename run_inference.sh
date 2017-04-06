@@ -13,7 +13,7 @@ export OMP_NUM_THREADS=24
 
 if [ -z $1 ]
 then
-    echo "use $0 <input folder> <scripts folder> [<output folder>]"
+    echo "use $0 <input folder> [<output folder>]"
     exit 1
 fi
 
@@ -40,13 +40,13 @@ IMAGES=${ROOT}image
 ROIS=${ROOT}roi
 LIST=${PATCHES}/filelist.txt
 
-SCRIPTS=$(path $2)
+SCRIPTS="kitti-segmentation-helper/"
 
-if [ -z $3 ]
+if [ -z $2 ]
 then
     OUT="CRFRESULT/"
 else
-    OUT=$(path $3)
+    OUT=$(path $2)
 fi
 
 
