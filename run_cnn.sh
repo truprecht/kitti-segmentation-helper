@@ -27,6 +27,7 @@ if [ -z $2 ]; then
     OUT="./"
 else
     OUT=$(path $2)
+    mkdir -p $OUT
 fi
 
 IMAGELIST=$1
@@ -63,9 +64,7 @@ LSTRIDE=120
 # st. output name := basename + postfix + autoincrement + file postfix, 
 # if input name = basename + file postfix
 #
-rm -r $DATA &> /dev/null
 mkdir -p $DATA
-rm ${PATCHLIST}_small ${PATCHLIST}_medium ${PATCHLIST}_large &> /dev/null
 touch ${PATCHLIST}_small ${PATCHLIST}_medium ${PATCHLIST}_large
 
 for IMAGE in $(cat $IMAGELIST)
@@ -99,7 +98,7 @@ mkdir -p $CRFROI
 mv ${DATA}small/*.txt $CRFROI
 mv ${DATA}medium/*.txt $CRFROI
 mv ${DATA}large/*.txt $CRFROI
-rm -r ${DATA}
+rm -r ${DATA}small ${DATA}medium ${DATA}large
 
 # move image to densecrf
 mkdir -p $CRFIMAGE
