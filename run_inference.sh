@@ -31,9 +31,9 @@ IMAGES=${ROOT}image.tar.gz
 PATCHES=${ROOT}input.tar.gz
 ROIS=${ROOT}roi.tar.gz
 
-tar -xzf $IMAGES
-tar -xzf $PATCHES
-tar -xzf $ROIS
+tar -C "/" -xzf $IMAGES
+tar -C "/" -xzf $PATCHES
+tar -C "/" -xzf $ROIS
 
 PATCHES=${ROOT}input
 IMAGES=${ROOT}image

@@ -107,9 +107,9 @@ do
     cp $IMAGE $CRFIMAGE
 done
 
-tar -czf "${OUT}input.tar.gz" "$CRFINPUT"
+tar -czPf "${OUT}input.tar.gz" "$CRFINPUT"
 rm -r $CRFINPUT
-tar -czf "${OUT}image.tar.gz" "$CRFIMAGE"
+tar -czPf "${OUT}image.tar.gz" "$CRFIMAGE"
 rm -r $CRFIMAGE
-tar -czf "${OUT}roi.tar.gz" "$CRFROI"
+tar -czPf "${OUT}roi.tar.gz" "$CRFROI"
 rm -r $CRFROI

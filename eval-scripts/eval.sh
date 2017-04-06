@@ -17,12 +17,16 @@ function path() {
     fi
 }
 
-cs=$(path $1)
-tools=$(path $2)
-pred=$(path $3)
-evalscript=$4
+if [ -z $1 ] || [ -z $2 ] ||[ -z $3 ]; then
+    echo "use $0 <prediction folder>"
+fi
 
-masks="temp/masks-$(basename $pred)/"
+pred=$(path $1)
+
+masks="/tmp/masks-$(basename $pred)/"
+tools="kitti-segmentation-helper/tools/"
+csroot="cityscapes/"
+evalscript="cityscapesScripts/cityscapesscripts/evaluation/evalInstanceLevelSemanticLabeling.py"
 
 mkdir -p ${masks}
 
@@ -33,7 +37,7 @@ i=1
 for prediction in ${pred}*.png
 do
     pname=$(basename $prediction | sed 's/.png//')
-    python2 ${tools}tools/evalmasks.py $prediction 2048 1024 $masks > ${masks}${pname}.txt &
+    python2 ${tools}evalmasks.py $prediction 2048 1024 $masks > ${masks}${pname}.txt &
     echo "started $i / $predictions"
     i=$(($i+1))
 done
@@ -42,7 +46,7 @@ echo "waiting $(date)..."
 wait
 echo "done $(date)"
 
-export CITYSCAPES_DATASET=$cs
+export CITYSCAPES_DATASET=$csroot
 export CITYSCAPES_RESULTS=$masks
 
 python $evalscript > "$(basename $pred).performance"
