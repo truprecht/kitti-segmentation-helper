@@ -44,10 +44,12 @@ if [ -e $logfile ]; then
     logfile="$logfile.$i"
 fi
 
+export GLOG_logtosterr=1
+
 if [ "$2" == "init" ]; then
-    srun caffe train -solver=$1 -weights=$3 -gpu 0 > "$logfile"
+    srun caffe train -solver=$1 -weights=$3 -gpu 0 > "$logfile" 2>&1
 elif [ "$2" == "snap" ]; then
-    srun caffe train -solver=$1 -snapshot=$3 -gpu 0 > "$logfile"
+    srun caffe train -solver=$1 -snapshot=$3 -gpu 0 > "$logfile" 2>&1
 else
     echo $(help)
     exit 1

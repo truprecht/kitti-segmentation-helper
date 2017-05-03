@@ -4,7 +4,7 @@
 #SBATCH --nodes=1
 #SBATCH --ntasks=1
 #SBATCH --cpus-per-task=24
-#SBATCH --mem-per-cpu=10583M
+#SBATCH --mem-per-cpu=2583M
 #SBATCH --mail-user=thomas.ruprecht@tu-dresden.de
 #SBATCH --mail-type=END,FAIL
 
@@ -27,6 +27,8 @@ function path() {
 }
 
 ROOT=$(path $1)
+TMP="/tmp/"
+
 IMAGES=${ROOT}image.tar.gz
 PATCHES=${ROOT}input.tar.gz
 ROIS=${ROOT}roi.tar.gz
@@ -35,9 +37,9 @@ tar -C "/" -xzf $IMAGES
 tar -C "/" -xzf $PATCHES
 tar -C "/" -xzf $ROIS
 
-PATCHES=${ROOT}input
-IMAGES=${ROOT}image
-ROIS=${ROOT}roi
+PATCHES=${TMP}input
+IMAGES=${TMP}image
+ROIS=${TMP}roi
 LIST=${PATCHES}/filelist.txt
 
 SCRIPTS="kitti-segmentation-helper/"

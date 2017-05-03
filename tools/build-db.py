@@ -18,5 +18,5 @@ if __name__ == "__main__":
                     image, annot = line.split(" ")
                     x = cv2.imread(image).transpose((2,0,1))
                     ptx.put(image.encode("ascii"), caffe.io.array_to_datum(x).SerializeToString())
-                    y = cv2.imread(annot, cv2.IMREAD_GRAYSCALE)
+                    y = np.array([cv2.imread(annot, cv2.IMREAD_GRAYSCALE)])
                     ltx.put(image.encode("ascii"), caffe.io.array_to_datum(y).SerializeToString())
