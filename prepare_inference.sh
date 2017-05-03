@@ -10,7 +10,7 @@
 
 if [ -z $1 ]
 then
-    echo "use $0 <input folder> <scripts>"
+    echo "use $0 <input folder>"
     exit 1
 fi
 
@@ -24,21 +24,24 @@ function path() {
 }
 
 DATA=$(path $1)
-RSMPL=$(path $2)tools/resample.py
-SCLIMG=$(path $2)tools/scale-image.py
-SCLROI=$(path $2)tools/scale-roi.py
+SCRIPTS="kitti-segmentation-helper"
+TMP="/tmp"
+
+RSMPL="${SCRIPTS}/tools/resample.py"
+SCLIMG="${SCRIPTS}/tools/scale-image.py"
+SCLROI="${SCRIPTS}/tools/scale-roi.py"
 
 IMAGES=${DATA}image.tar.gz
 PATCHES=${DATA}input.tar.gz
 ROIS=${DATA}roi.tar.gz
 
-tar -xzf $IMAGES
-tar -xzf $PATCHES
-tar -xzf $ROIS
+tar -C "/" -xzf $IMAGES
+tar -C "/" -xzf $PATCHES
+tar -C "/" -xzf $ROIS
 
-PATCHES=${DATA}input
-IMAGES=${DATA}image
-ROIS=${DATA}roi
+PATCHES=${TMP}/input
+IMAGES=${TMP}/image
+ROIS=${TMP}/roi
 LIST=${PATCHES}/filelist.txt
 
 
@@ -77,3 +80,10 @@ do
     fi
     echo "rescaled roi $roi"
 done
+
+mkdir ${DATA}input
+mkdir ${DATA}image
+mkdir ${DATA}roi
+cp $PATCHES/* ${DATA}input/
+cp $IMAGES/* ${DATA}image/
+cp $ROIS/* ${DATA}roi/

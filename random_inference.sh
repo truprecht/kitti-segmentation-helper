@@ -13,7 +13,7 @@ export OMP_NUM_THREADS=24
 
 if [ -z $1 ]
 then
-    echo "use $0 <input folder> <scripts folder> [<output folder>]"
+    echo "use $0 <input folder> [<output folder>]"
     exit 1
 fi
 
@@ -27,11 +27,15 @@ function path() {
 }
 
 DATA=$(path $1)
-TOOLS=$(path $2)
-if [ -z $3 ]; then OUT="./"; else OUT=$(path $3); fi
+TOOLS="kitti-segmentation-helper"
+if [ -z $2 ]; then OUT="./"; else OUT=$(path $2); fi
 
-RAND="${TOOLS}tools/randn.py"
-RESCALE="${TOOLS}tools/scale-labels.py"
+RAND="${TOOLS}/tools/randn.py"
+RESCALE="${TOOLS}/tools/scale-labels.py"
+
+cp -r "${DATA}input" "/tmp/"
+cp -r "${DATA}image" "/tmp/"
+cp -r "${DATA}roi" "/tmp/"
 
 # randomize parameters
 wl=$(python $RAND 1 0.3)     # weight for local CNN prediction term (large patches)
@@ -56,7 +60,7 @@ fi
 
 mkdir -p "${OUT}${CONFIG}"
 
-srun inference -p ${DATA}input/filelist.txt -ws ${ws} -wm ${wm} -wl ${wl} -wi ${wi} -sp ${sp} -df ${df} -wlocc ${wlocc} -slocl ${slocl} -slocpr ${slocpr} -iters ${iters} -o "${OUT}${CONFIG}/"
+srun inference -p "/tmpt/input/filelist.txt" -ws ${ws} -wm ${wm} -wl ${wl} -wi ${wi} -sp ${sp} -df ${df} -wlocc ${wlocc} -slocl ${slocl} -slocpr ${slocpr} -iters ${iters} -o "${OUT}${CONFIG}/"
 
 for lbl in ${OUT}${CONFIG}/*
 do
