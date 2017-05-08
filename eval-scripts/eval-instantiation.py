@@ -21,6 +21,7 @@ def overlapped(prediction, groundtruth):
     return np.sum(np.logical_and(prediction, groundtruth))
 
 def coverage(instance, predictions):
+    if len(predictions) == 0: return 0
     match = max(predictions.iterkeys(), key = lambda label: overlapped(instance, predictions[label]))
     return iou(instance, predictions[match])
 
@@ -56,9 +57,9 @@ with open(argv[1]) as labelpairs:
 
         scores.append(( iou(prediction_foreground, groundtruth_foreground)  # class-level iou
                       , np.average([coverage(gti, prediction_masks) for gti in groundtruth_masks.values()], weights = instances_area) if np.sum(instances_area) > 0 else 1 # mean weighted coverage
-                      , np.average([coverage(gti, prediction_masks) for gti in groundtruth_masks.values()]) # mean unweighted coverage
-                      , np.average([precision(pi, groundtruth_foreground) for pi in prediction_masks.values()]) # average (instance - class) precision
-                      , np.average([precision(gti, prediction_foreground) for gti in groundtruth_masks.values()]) # average (class - instance) recall
+                      , np.average([coverage(gti, prediction_masks) for gti in groundtruth_masks.values()]) if len(groundtruth_masks) > 0 else 1 # mean unweighted coverage
+                      , np.average([precision(pi, groundtruth_foreground) for pi in prediction_masks.values()]) if len(prediction_masks) > 0 else 1 # average (instance - class) precision
+                      , np.average([precision(gti, prediction_foreground) for gti in groundtruth_masks.values()]) if len(groundtruth_masks) > 0 else 1 # average (class - instance) recall
                       , np.sum([not np.any(np.logical_and(pi, groundtruth_foreground)) for pi in prediction_masks.values()]) # average number of false - positive instances
                       , np.sum([not np.any(np.logical_and(gti, prediction_foreground)) for gti in groundtruth_masks.values()]) # average number of false - negative instances
                       , insPrec # average instantiation precision
