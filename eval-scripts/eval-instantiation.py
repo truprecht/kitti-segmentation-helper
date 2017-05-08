@@ -14,7 +14,8 @@ def foregroundmask(labelarray):
     return np.array(labelarray > 0, dtype = np.uint8)
 
 def iou(prediction, groundtruth):
-    return np.sum(np.logical_and(prediction, groundtruth)) / np.sum(np.logical_or(prediction, groundtruth))
+    divisor = np.sum(np.logical_or(prediction, groundtruth))
+    return np.sum(np.logical_and(prediction, groundtruth)) / divisor if divisor > 0 else 1 
 
 def overlapped(prediction, groundtruth):
     return np.sum(np.logical_and(prediction, groundtruth))
@@ -48,10 +49,13 @@ with open(argv[1]) as labelpairs:
         prediction_masks, groundtruth_masks = labelmasks(prediction), labelmasks(groundtruth)
 
         tp_instances = np.sum([np.any([iou(gti, pi) > .5 for pi in prediction_masks.values()]) for gti in groundtruth_masks.values()])
-        insPrec = tp_instances / len(prediction_masks)
-        insRec = tp_instances / len(groundtruth_masks)
+        insPrec = tp_instances / len(prediction_masks) if len(prediction_masks) > 0 else 1
+        insRec = tp_instances / len(groundtruth_masks) if len(groundtruth_masks) > 0 else 1
+
+        instances_area = [np.sum(gti) for gti in groundtruth_masks.values()]
+
         scores.append(( iou(prediction_foreground, groundtruth_foreground)  # class-level iou
-                      , np.average([coverage(gti, prediction_masks) for gti in groundtruth_masks.values()], weights = [np.sum(gti) for gti in groundtruth_masks.values()]) # mean weighted coverage
+                      , np.average([coverage(gti, prediction_masks) for gti in groundtruth_masks.values()], weights = instances_area) if np.sum(instances_area) > 0 else 1 # mean weighted coverage
                       , np.average([coverage(gti, prediction_masks) for gti in groundtruth_masks.values()]) # mean unweighted coverage
                       , np.average([precision(pi, groundtruth_foreground) for pi in prediction_masks.values()]) # average (instance - class) precision
                       , np.average([precision(gti, prediction_foreground) for gti in groundtruth_masks.values()]) # average (class - instance) recall
