@@ -19,12 +19,12 @@ def load(datafile):
         try:
             # (41,      41,     6)
             # (height,  width,  channels)
-            return loadmat(filepath)["data"][:, :, :, 0]
+            return loadmat(datafile)["data"][:, :, :, 0]
         except Exception, e:
             # sometimes caffe decides to return matlab 7.3 matrices...
             # (6,           41,     41)
             # (channels,    width,  height)
-            return np.swapaxes((filepath)["data"][0], 0, 2)
+            return np.swapaxes(File(datafile)["data"][0], 0, 2)
 
 
 # cuts binary masks for each label in an image (all but 0), stores it in a dic label -> mask
