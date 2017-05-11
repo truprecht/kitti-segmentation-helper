@@ -17,14 +17,14 @@ def load(datafile, scale = None):
     
     if datafile.endswith(".mat"):
         try:
-            # (41,      41,     6)
-            # (height,  width,  channels)
+            # (41,     41,    6)
+            # (height, width, channels)
             scores = loadmat(datafile)["data"][:, :, :, 0]
         except Exception, e:
             # sometimes caffe decides to return matlab 7.3 matrices...
-            # (6,           41,     41)
-            # (channels,    width,  height)
-            scores = np.swapaxes(File(datafile)["data"][0], 0, 2)
+            # (6,        41,     41)
+            # (channels, height, width)
+            scores = np.transpose(File(datafile)["data"][0], (1, 2, 0))
     
     if not scale is None:
         scores = resize(scores, scale)

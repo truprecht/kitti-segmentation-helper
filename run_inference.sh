@@ -93,17 +93,19 @@ done
 # run inference
 mkdir -p $OUT
 
-wl=1 # weight for local CNN prediction term (large patches)
-wm=1.7 # weight for local CNN prediction term (medium patches)
-ws=1.7 # weight for local CNN prediction term (small patches)
-sp=0.1 # stddev in the kernel
+# 0.09-1.62-1.63-0.08-20.5-0.67-1.18-85.67-0.19
 
-wi=12 # weight for inter-connected component term
-df=0.6 # threshold for obtaining foreground map
+wl=0.09 # weight for local CNN prediction term (large patches)
+wm=1.62 # weight for local CNN prediction term (medium patches)
+ws=1.63 # weight for local CNN prediction term (small patches)
+sp=0.08 # stddev in the kernel
 
-wlocc=1.7 # weight for smoothness term
-slocl=80 # spatial stddev
-slocpr=0.2 # CNN prediction stddev
+wi=20.5 # weight for inter-connected component term
+df=0.67 # threshold for obtaining foreground map
+
+wlocc=1.18 # weight for smoothness term
+slocl=85.67 # spatial stddev
+slocpr=0.19 # CNN prediction stddev
 iters=50 # iterations of mean field to run
 
 srun inference -p $LIST -ws ${ws} -wm ${wm} -wl ${wl} -wi ${wi} -sp ${sp} -df ${df} -wc ${wc} -wp ${wp} -sps ${sps} -wcol ${wcol} -wlocc ${wlocc} -wlocp ${wlocp} -slocl ${slocl} -slocpr ${slocpr} -iters ${iters} -o $OUT
