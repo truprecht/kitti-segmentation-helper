@@ -8,24 +8,28 @@ from scipy.io import loadmat
 
 
 # load a label from a file name
-def load(datafile):
+def load(datafile, scale = None):
     if datafile.endswith(".png"):
         return imread(datafile, IMREAD_GRAYSCALE)
     
     if datafile.endswith(".dat"):
-        return np.argmax(np.fromfile(predictionfilename, dtype = np.uint8).reshape(groundtruth.shape, order = 'F'), axis = 2)
+        scores = np.fromfile(predictionfilename, dtype = np.uint8).reshape(groundtruth.shape, order = 'F')
     
     if datafile.endswith(".mat"):
         try:
             # (41,      41,     6)
             # (height,  width,  channels)
-            return loadmat(datafile)["data"][:, :, :, 0]
+            scores = loadmat(datafile)["data"][:, :, :, 0]
         except Exception, e:
             # sometimes caffe decides to return matlab 7.3 matrices...
             # (6,           41,     41)
             # (channels,    width,  height)
-            return np.swapaxes(File(datafile)["data"][0], 0, 2)
+            scores = np.swapaxes(File(datafile)["data"][0], 0, 2)
+    
+    if not scale is None:
+        scores = resize(scores, scale)
 
+    return np.argmax(scores, axis = 2)
 
 # cuts binary masks for each label in an image (all but 0), stores it in a dic label -> mask
 def labelmasks(labelarray):
@@ -75,7 +79,7 @@ def scores(labelpair):
 
     groundtruth = load(labelfilename)
     height, width = groundtruth.shape
-    prediction = resize(load(predictionfilename), (width, height))
+    prediction = load(predictionfilename, (width, height))
 
     prediction_foreground, groundtruth_foreground = foregroundmask(prediction), foregroundmask(groundtruth)
     prediction_masks, groundtruth_masks = labelmasks(prediction), labelmasks(groundtruth)

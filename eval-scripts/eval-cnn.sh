@@ -24,15 +24,17 @@ fi
 
 TMP="/tmp"
 WEIGHTS="cnn/cityscapes.caffemodel"
-PROTOTXT="cnn/test.caffemodel"
+PROTOTXT="cnn/test.prototxt"
 CAFFEOUT="$TMP/fc8_val3769/"
 LIST="test_list.txt"
 LIST_IDS="test_list_id_only.txt"
 
+
 cat $1 | awk '{print $1}' > $LIST
 cat $LIST | sed 's:^.*/::' | sed 's:.png::' > $LIST_IDS
 
-srun caffe test --weights="$WEIGHTS" --model="$PROTOTXT" --gpu=0
+mkdir -p $CAFFEOUT
+srun caffe test --weights="$WEIGHTS" --model="$PROTOTXT" --gpu=0 --iterations="$(cat $LIST | wc -l)"
 
 cat $1 | awk '{print $2}' > "/tmp/annots"
 cat $LIST_IDS | sed "s:^:$CAFFEOUT:" | sed 's:$:_blob_0.mat:' | paste - "/tmp/annots" > "/tmp/annots.1"
