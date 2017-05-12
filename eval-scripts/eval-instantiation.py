@@ -7,12 +7,12 @@ from scipy.io import loadmat
 
 from sys import argv
 from multiprocessing import Pool
-from os.path import isFile
+from os.path import isfile
 
 
 # load a label from a file name
 def load(datafile, scale = None):
-    assert isFile(datafile), "file %s does not exist" %(datafile, )
+    assert isfile(datafile), "file %s does not exist" %(datafile, )
     
     if datafile.endswith(".png"):
         return imread(datafile, IMREAD_GRAYSCALE)
