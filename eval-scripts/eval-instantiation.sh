@@ -18,12 +18,13 @@ function path() {
 }
 
 if [ -z $1 ]; then
-    echo "use $0 <prediction folder>"
+    echo "use $0 <prediction folder> <annotated image list>"
 fi
 
 pred=$(path $1)
-find ${pred} -name "*.png" | sort | paste - testset.annot > /tmp/annots
+cat $2 | awk '{ print $2 }' > "/tmp/annots"
+cat $2 | awk '{ print $1 }' | sed "s:^.*/:$pred:" | paste - "/tmp/annots" > "/tmp/annots.1" 
 python kitti-segmentation-helper/eval-scripts/eval-instantiation.py /tmp/annots 24 > "$(basename $pred).performance"
 
-rm /tmp/annots
+rm /tmp/annots*
 
