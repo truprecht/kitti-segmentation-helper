@@ -69,10 +69,10 @@ def crop(image, pwidth, pheight, stride, y_off, label_image=None):
 
             # normalize train IDs to increment from 1 to |l| in each patch locally
             i = 0
-            for label in np.unique(labels):
+            for label in sorted(np.unique(labels)):
                 np.place(labels, labels == label, [i])
                 i += 1
-            np.place(labels, labels > 5, [0])
+            # np.place(labels, labels > 5, [0])
 
         patch_tuples.append((patch, labels, roi))
 
