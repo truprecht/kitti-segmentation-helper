@@ -1,21 +1,24 @@
 from __future__ import division
-from sys import argv
+
 import numpy as np
 from cv2 import resize, imread, IMREAD_GRAYSCALE
-from multiprocessing import Pool
 from h5py import File
 from scipy.io import loadmat
+
+from sys import argv
+from multiprocessing import Pool
+from os.path import isFile
 
 
 # load a label from a file name
 def load(datafile, scale = None):
+    assert isFile(datafile), "file %s does not exist" %(datafile, )
+    
     if datafile.endswith(".png"):
         return imread(datafile, IMREAD_GRAYSCALE)
-    
-    if datafile.endswith(".dat"):
+    elif datafile.endswith(".dat"):
         scores = np.fromfile(predictionfilename, dtype = np.uint8).reshape(groundtruth.shape, order = 'F')
-    
-    if datafile.endswith(".mat"):
+    elif datafile.endswith(".mat"):
         try:
             # (41,     41,    6)
             # (height, width, channels)
@@ -25,7 +28,8 @@ def load(datafile, scale = None):
             # (6,        41,     41)
             # (channels, height, width)
             scores = np.transpose(File(datafile)["data"][0], (1, 2, 0))
-    
+    else: raise Exception("unsupported file format (%s)" % (datafile.split(".")[-1]))
+
     if not scale is None:
         scores = resize(scores, scale)
 
