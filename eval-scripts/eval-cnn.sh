@@ -39,7 +39,7 @@ srun caffe test --weights="$WEIGHTS" --model="$PROTOTXT" --gpu=0 --iterations="$
 cat $1 | awk '{print $2}' > "/tmp/annots"
 cat $LIST_IDS | sed "s:^:$CAFFEOUT:" | sed 's:$:_blob_0.mat:' | paste - "/tmp/annots" > "/tmp/annots.1"
 
-python kitti-segmentation-helper/eval-scripts/eval-instantiation.py "/tmp/annots.1" 6
+python kitti-segmentation-helper/eval-scripts/eval-instantiation.py per-pair "/tmp/annots.1" 6
 
 rm -r "/tmp/fc8_val3769/"
 rm "/tmp/annots" "/tmp/annots.1"

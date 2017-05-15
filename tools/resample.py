@@ -1,4 +1,4 @@
-#!python2
+#!/usr/bin/env python2
 """
     resample each data array of a mat file in folder to size
 """
@@ -47,11 +47,11 @@ if __name__ == "__main__":
             except Exception, e:
                 # sometimes caffe decides to return matlab 7.3 matrices...
                 # (6,           41,     41)
-                # (channels,    width,  height)
+                # (channels,  height,    width)
                 mat = File(filepath)["data"][0]
-                mat = np.swapaxes(mat, 0, 2)
+                mat = np.transpose(mat, (1, 2, 0))
 
-            omat = resize(mat, (nheight, nwidth))
+            omat = resize(mat, (nwidth, nheight))
 
             ofile = filename.replace("_blob_0.mat", ".dat")
             filelist += ofile + "\n"

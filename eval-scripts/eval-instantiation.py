@@ -94,7 +94,11 @@ def scores(labelpair):
 
     instances_area = [np.sum(gti) for gti in groundtruth_masks.values()]
 
-    return  ( iou(prediction_foreground, groundtruth_foreground)  # class-level iou
+    return  ( len(groundtruth_masks)
+            , len(prediction_masks)
+            , labelfilename.split("_")[-2]
+            ),
+            ( iou(prediction_foreground, groundtruth_foreground)  # class-level iou
             , np.average([coverage(gti, prediction_masks) for gti in groundtruth_masks.values()], weights = instances_area) if np.sum(instances_area) > 0 else 1 # mean weighted coverage
             , np.average([coverage(gti, prediction_masks) for gti in groundtruth_masks.values()]) if len(groundtruth_masks) > 0 else 1 # mean unweighted coverage
             , np.average([precision(pi, groundtruth_foreground) for pi in prediction_masks.values()]) if len(prediction_masks) > 0 else 1 # average (instance - class) precision
@@ -107,11 +111,21 @@ def scores(labelpair):
             )
 
 if __name__ == "__main__":
-    assert len(argv) == 3
+    assert len(argv) == 4
+    action, patchfile, processors_ = argv[1:]
+    assert action in ["per-pair", "summary"]
+
+    processors = Pool(int(processors_))
     
-    processors = Pool(int(argv[2]))
-    with open(argv[1]) as labelpairs_:
+    with open(patchfile) as labelpairs_:
         labelpairs = labelpairs_.readlines()
-        score = np.average( processors.map(scores, labelpairs), axis = 0 )
         
-        print "%f %f %f %f %f %f %f %f %f %f" % tuple(score)
+        if action == "summary":
+            _, scoresperpatch = zip(*processors.map(scores, labelpairs))
+            score = np.average(scoresperpatch, axis = 0)
+            
+            print "%f %f %f %f %f %f %f %f %f %f" % tuple(score)
+        
+        elif action == "per-pair":
+            for stats, score in processors.map(scores, labelpairs):
+                print "%f %f %f %f %f %f %f %f %f %f %f %f %f" %(stats + score, )

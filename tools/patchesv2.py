@@ -1,4 +1,4 @@
-#python2
+#!/usr/bin/env python2
 """
     provides methods to cut image patches as used in segmentation algorithm
 """
