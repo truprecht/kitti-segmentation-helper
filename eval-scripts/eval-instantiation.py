@@ -94,7 +94,7 @@ def scores(labelpair):
 
     instances_area = [np.sum(gti) for gti in groundtruth_masks.values()]
 
-    return  ( len(groundtruth_masks)
+    return (( len(groundtruth_masks)
             , len(prediction_masks)
             , labelfilename.split("_")[-2]
             ),
@@ -108,7 +108,7 @@ def scores(labelpair):
             , insPrec # average instantiation precision
             , insRec # average instantiation recall
             , 2 * insPrec * insRec / (insPrec + insRec) if insPrec + insRec > 0 else 0 # average instantiation f1
-            )
+            ))
 
 if __name__ == "__main__":
     assert len(argv) == 4
@@ -128,4 +128,4 @@ if __name__ == "__main__":
         
         elif action == "per-pair":
             for stats, score in processors.map(scores, labelpairs):
-                print "%f %f %f %f %f %f %f %f %f %f %f %f %f" %(stats + score, )
+                print "%d %d %s %f %f %f %f %f %f %f %f %f %f" % tuple(stats + score)
