@@ -50,15 +50,16 @@ if __name__ == "__main__":
                 # (channels,  height,    width)
                 mat = File(filepath)["data"][0]
                 mat = np.transpose(mat, (1, 2, 0))
-
+            
             omat = resize(mat, (nwidth, nheight))
-
+            omat = np.transpose(omat, (2, 0, 1))
+            
             ofile = filename.replace("_blob_0.mat", ".dat")
             filelist += ofile + "\n"
 
             # output
             with open(outputdir + ofile, "wb") as binfile:
-                omat.flatten(order="F").tofile(binfile)
+                omat.flatten().tofile(binfile)
 
         except Exception, e:
             print "... skipping b/c %s" %(str(e))
