@@ -24,7 +24,7 @@ fi
 pred=$(path $1)
 cat $2 | awk '{ print $2 }' > "/tmp/annots"
 cat $2 | awk '{ print $1 }' | sed "s:^.*/:$pred:" | paste - "/tmp/annots" > "/tmp/annots.1" 
-python kitti-segmentation-helper/eval-scripts/eval-instantiation.py per-pair /tmp/annots.1 24
+python "kitti-segmentation-helper/eval-scripts/eval-instantiation.py" summary "/tmp/annots.1" 24
 
 rm /tmp/annots*
 
