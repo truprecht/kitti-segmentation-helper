@@ -125,6 +125,7 @@
     - vectors are similar, encurage same label
     - if they are more similar with shifted values, encurage greater/smaller label
 
+asd
 $$\sum_x^X \sum_{i, j}^{P_x} \sum_t^T \mu^{t}(y_i, y_j) k^{t}(h_t(p_{x,i}), h_{-t}(p_{x, j}))$$
 for patches $$X$$ with a set of pixels $$P_x$$; a set of allowed shifts $$T$$,
 $$\mu$$ keeps track of valid combiantions of labels and shifts and $$k$$ is a gaussian kernel
@@ -134,6 +135,7 @@ $$\mu$$ keeps track of valid combiantions of labels and shifts and $$k$$ is a ga
 - smoothness term:
     - encurage same label for pixels of prediction and region
 
+asd
 $$\sum_x^X \sum_{i, j}^{P_x} \delta(y_i \neq y_j) k_{pred}(p_{x,i}, p_{x,j}) k_{dist}(i, j)$$
 where $$p_{x,i}$$ contains label predictions in of pixel i patch x
 
@@ -143,6 +145,7 @@ where $$p_{x,i}$$ contains label predictions in of pixel i patch x
     - disencurage same labels if regions are not connected
     - use connected regions of foreground (via predictions) as components
 
+asd
 $$\sum_{c, c'}^C \sum_{i \in P_c} \sum_{j \in P_{c'}} \delta(y_i = y_j)$$
 for foreground components $$C$$ with pixels $$P_c$$
 
