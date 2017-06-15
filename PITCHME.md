@@ -27,6 +27,18 @@
     - max 8 objects per image
 - <!-- IMAGE -->
 
+#### Evaluation
+- class level:
+    - oiu: intersection over union of predicted / groundtruth foreground pixels
+- object level:
+    - mwc/muc: average rate of groundtruth object coverage
+    - average precision: prediced instances vs. groundtruth foreground
+    - average recall: groundtruth instances vs predicted foreground
+    - average false positive / negative instances
+    - average instance precision: match each predicted obejct with > 50% overlapping groundtruth obejct
+    - average instance recall: match each groundtruth object with > 50% overlapping prediced object
+    - average instance f1-score using above instance precision / recall
+
 #### Training
 - separate train and test images
 - cut image patches
@@ -129,28 +141,25 @@
 - solution: compute inference on downscaled predictions (1/16)
 
 ### Training by searching parameters
-- Random search
-- normal distribution
-- later: normal distribution
+- use patch predictions of trained cnn on test set
+- random search:
+    - merge patches using different paramters
+    - normal distributed parameters around published ones
+    - choose by best f1 score
 
 ## Results
 
 ### Examples
 #### Local cnn predictions
+<!-- IMAGES -->
+
 #### Merged patches
+<!-- IMAGES -->
 
 ### CNN performance
+<!-- TABLE -->
 
 ### Merged prediction performance
+<!-- TABLE -->
 
-
-## Conclusion
-
-### What skills did I need to use?
-
-### What did I learn?
-- some results are hard to reproduce
-- some people make it hard by publishing incomplete
-    - pipelines
-    - descriptions
-    - data
+## Conclusions
