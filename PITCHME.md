@@ -1,8 +1,11 @@
 # Instance-Level Segmentation for Autonomous Driving with Deep Densely Connected MRFs
 
+---
 
 ## Introduction
 
+
+---
 
 ## Dataset
 - Cityscapes <-> Kitti
@@ -10,6 +13,7 @@
 - quality (resolution, instances)
 - labeling quality (class, instances)
 
+---
 
 ## Pipeline
 
@@ -27,6 +31,8 @@
     - max 8 objects per image
 - <!-- IMAGE -->
 
++++
+
 #### Evaluation
 - class level:
     - oiu: intersection over union of predicted / groundtruth foreground pixels
@@ -38,6 +44,8 @@
     - average instance precision: match each predicted obejct with > 50% overlapping groundtruth obejct
     - average instance recall: match each groundtruth object with > 50% overlapping prediced object
     - average instance f1-score using above instance precision / recall
+
++++
 
 #### Training
 - separate train and test images
@@ -54,6 +62,8 @@
     - rate parameters by average f_1 score
 - <!-- IMAGE -->
 
++++
+
 ### What was provided
 - Zhang et al.
     - patch merging using mrf
@@ -62,6 +72,8 @@
     - image training and validation sets
     - implementation for generating labels
     - (implementation for measuring accuracy)
+
++++
 
 ### Filled gaps
 - ordering object labels by depth
@@ -78,6 +90,8 @@
 - prediction scores
     - Cityscapes only provided average IoU
 
+---
+
 ## Convolutional neural network
 
 ### Overview
@@ -88,16 +102,22 @@
 - <!-- IMAGE -->
 - trained to predict objects depth
 
++++
+
 ### Training as provided
 - learning rate?
 - lr was reduced each 20,000 iterations
 - <!-- IMAGE -->
+
++++
 
 ### Bootstrapped training
 - finding optimal learning rate and update policy using small portions of the dataset
 - <!-- IMAGES -->
 - run training in parallell for different generalization settings and choose best
 - <!-- IMAGES -->
+
+---
 
 ## Markov random field
 
@@ -106,6 +126,8 @@
 - What is a solution?
 - How is it solved? -- cite Krahenbuhl, complexity?
 - Training?
+
++++
 
 ### Model for patch-merging
 #### Weights
@@ -126,11 +148,15 @@
     - $$\sum_{c, c'}^C \sum_{i \in P_c} \sum_{j \in P_{c'}} \delta(y_i = y_j)
       for foreground components $$C$$ with pixels $$P_c$$
 
++++
+
 #### Parameters
 - every potential term has own weight; prediction term even one for each patch size (5)
 - deviations of gaussian kernel functions (3)
 - threshold for separating foreground components (1)
 - number of iterations for the approximate inference
+
++++
 
 ### Performance issues
 - crf inference is sublinear in the number of edges
@@ -140,6 +166,8 @@
 - ... and needed ~ 8GB RAM
 - solution: compute inference on downscaled predictions (1/16)
 
++++
+
 ### Training by searching parameters
 - use patch predictions of trained cnn on test set
 - random search:
@@ -147,19 +175,31 @@
     - normal distributed parameters around published ones
     - choose by best f1 score
 
+--
+
 ## Results
+
++++
 
 ### Examples
 #### Local cnn predictions
 <!-- IMAGES -->
 
++++
+
 #### Merged patches
 <!-- IMAGES -->
+
++++
 
 ### CNN performance
 <!-- TABLE -->
 
++++
+
 ### Merged prediction performance
 <!-- TABLE -->
+
+---
 
 ## Conclusions
