@@ -1,13 +1,13 @@
-# Instance-Level Segmentation for Autonomous Driving with Deep Densely Connected MRFs
+## Instance-Level Segmentation for Autonomous Driving with Deep Densely Connected MRFs
 
 ---
 
-## Introduction
+### Introduction
 
 
 ---
 
-## Dataset
+### Dataset
 - Cityscapes <-> Kitti
 - size (train, test, val)
 - quality (resolution, instances)
@@ -15,10 +15,7 @@
 
 ---
 
-## Pipeline
-
-### Overview
-#### Prediction
+### Pipeline - Prediction
 - cut image patches
     - overlapping
     - different sizes for different object distances
@@ -33,7 +30,7 @@
 
 +++
 
-#### Evaluation
+### Pipeline - Evaluation
 - class level:
     - oiu: intersection over union of predicted / groundtruth foreground pixels
 - object level:
@@ -47,7 +44,7 @@
 
 +++
 
-#### Training
+### Pipeline - Training
 - separate train and test images
 - cut image patches
     - for each image
@@ -92,9 +89,7 @@
 
 ---
 
-## Convolutional neural network
-
-### Overview
+### CNN - Overview
 - VGG-16 with slightly modified layers
 - x convolutional layers, pooling
     - input 300 x 300
@@ -104,14 +99,14 @@
 
 +++
 
-### Training as provided
+### CNN - Training as provided
 - learning rate?
 - lr was reduced each 20,000 iterations
 - <!-- IMAGE -->
 
 +++
 
-### Bootstrapped training
+### CNN - Bootstrapped training
 - finding optimal learning rate and update policy using small portions of the dataset
 - <!-- IMAGES -->
 - run training in parallell for different generalization settings and choose best
@@ -119,9 +114,7 @@
 
 ---
 
-## Markov random field
-
-### Overview
+### MRF - Overview
 - What is a densely connected MRF?
 - What is a solution?
 - How is it solved? -- cite Krahenbuhl, complexity?
@@ -129,8 +122,7 @@
 
 +++
 
-### Model for patch-merging
-#### Weights
+### MRF - Model for patch-merging
 - local patch prediction term:
     - compare label scores of pixels
     - vectors are similar, encurage same label
@@ -150,7 +142,7 @@
 
 +++
 
-#### Parameters
+### MRF - Parameters
 - every potential term has own weight; prediction term even one for each patch size (5)
 - deviations of gaussian kernel functions (3)
 - threshold for separating foreground components (1)
@@ -158,7 +150,7 @@
 
 +++
 
-### Performance issues
+### MRF - Performance issues
 - crf inference is sublinear in the number of edges
 - number of edges increase quadratic to the number of pixels
 - Cityscapes' is significantly larger than Kitti
@@ -168,7 +160,7 @@
 
 +++
 
-### Training by searching parameters
+### MRF - Training by searching parameters
 - use patch predictions of trained cnn on test set
 - random search:
     - merge patches using different paramters
@@ -177,29 +169,24 @@
 
 --
 
-## Results
-
-+++
-
-### Examples
-#### Local cnn predictions
+### Examples - Local cnn predictions
 <!-- IMAGES -->
 
 +++
 
-#### Merged patches
+### Examples - Merged patches
 <!-- IMAGES -->
 
 +++
 
-### CNN performance
+### Results - CNN performance
 <!-- TABLE -->
 
 +++
 
-### Merged prediction performance
+### Results - Merged prediction performance
 <!-- TABLE -->
 
 ---
 
-## Conclusions
+### Conclusions
