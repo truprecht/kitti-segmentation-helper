@@ -126,7 +126,7 @@
     - if they are more similar with shifted values, encurage greater/smaller label
 
 asd
-$$\sum_x^X \sum_{i, j}^{P_x} \sum_t^T \mu^{t}(y_i, y_j) k^{t}(h_t(p_{x,i}), h_{-t}(p_{x, j}))$$
+$$\sum\_x^X \sum\_{i, j}^{P_x} \sum_t^T \mu^{t}(y\_i, y\_j) k^{t}(h\_t(p_{x,i}), h\_{-t}(p\_{x, j}))$$
 for patches $$X$$ with a set of pixels $$P_x$$; a set of allowed shifts $$T$$,
 $$\mu$$ keeps track of valid combiantions of labels and shifts and $$k$$ is a gaussian kernel
 
@@ -136,8 +136,8 @@ $$\mu$$ keeps track of valid combiantions of labels and shifts and $$k$$ is a ga
     - encurage same label for pixels of prediction and region
 
 asd
-$$\sum_x^X \sum_{i, j}^{P_x} \delta(y_i \neq y_j) k_{pred}(p_{x,i}, p_{x,j}) k_{dist}(i, j)$$
-where $$p_{x,i}$$ contains label predictions in of pixel i patch x
+$$\sum\_x^X \sum\_{i, j}^{P_x} \delta(y\_i \neq y\_j) k_{pred}(p\_{x,i}, p\_{x,j}) k\_{dist}(i, j)$$
+where $$p\_{x,i}$$ contains label predictions in of pixel i patch x
 
 +++
 ### MRF - Model for patch-merging
@@ -146,8 +146,8 @@ where $$p_{x,i}$$ contains label predictions in of pixel i patch x
     - use connected regions of foreground (via predictions) as components
 
 asd
-$$\sum_{c, c'}^C \sum_{i \in P_c} \sum_{j \in P_{c'}} \delta(y_i = y_j)$$
-for foreground components $$C$$ with pixels $$P_c$$
+$$\sum\_{c, c'}^C \sum\_i^{P\_c} \sum\_j^{P\_{c'}} \delta(y\_i = y\_j)$$
+for foreground components $$C$$ with pixels $$P\_c$$
 
 +++
 ### MRF - Parameters
