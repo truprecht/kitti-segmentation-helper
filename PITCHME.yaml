@@ -1,3 +1,4 @@
 transition: none
 slide-number: true
 theme-override: gitpitch-resources/PITCHME.css
+mathjax : TeX-MML-AM_HTMLorMML-full

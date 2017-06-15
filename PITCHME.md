@@ -29,10 +29,12 @@
 - <!-- IMAGE -->
 
 +++
-
 ### Pipeline - Evaluation
 - class level:
     - oiu: intersection over union of predicted / groundtruth foreground pixels
+
++++
+### Pipeline - Evaluation
 - object level:
     - mwc/muc: average rate of groundtruth object coverage
     - average precision: prediced instances vs. groundtruth foreground
@@ -43,7 +45,6 @@
     - average instance f1-score using above instance precision / recall
 
 +++
-
 ### Pipeline - Training
 - separate train and test images
 - cut image patches
@@ -60,7 +61,6 @@
 - <!-- IMAGE -->
 
 +++
-
 ### What was provided
 - Zhang et al.
     - patch merging using mrf
@@ -71,7 +71,6 @@
     - (implementation for measuring accuracy)
 
 +++
-
 ### Filled gaps
 - ordering object labels by depth
     - depth was not available
@@ -98,14 +97,12 @@
 - trained to predict objects depth
 
 +++
-
 ### CNN - Training as provided
 - learning rate?
 - lr was reduced each 20,000 iterations
 - <!-- IMAGE -->
 
 +++
-
 ### CNN - Bootstrapped training
 - finding optimal learning rate and update policy using small portions of the dataset
 - <!-- IMAGES -->
@@ -115,13 +112,13 @@
 ---
 
 ### MRF - Overview
-- What is a densely connected MRF?
-- What is a solution?
-- How is it solved? -- cite Krahenbuhl, complexity?
-- Training?
+- fully connceted markov random field
+    - there is a pairwise energy for each node pair
+- inference: configuration with minimal energy
+- efficient approximate solution using Krähenbühl's algorithm
+- parameters might be problem-specific
 
 +++
-
 ### MRF - Model for patch-merging
 - local patch prediction term:
     - compare label scores of pixels
@@ -130,10 +127,16 @@
     - $$\sum_x^X \sum_{i, j}^{P_x} \sum_t^T \mu^{t}(y_i, y_j) k^{t}(h_t(p_{x,i}), h_{-t}(p_{x, j}))$$
       for patches $$X$$ with a set of pixels $$P_x$$; a set of allowed shifts $$T$$,
       $$\mu$$ keeps track of valid combiantions of labels and shifts and $$k$$ is a gaussian kernel
+
++++
+### MRF - Model for patch-merging
 - smoothness term:
     - encurage same label for pixels of prediction and region
     - $$\sum_x^X \sum_{i, j}^{P_x} \delta(y_i \neq y_j) k_{pred}(p_{x,i}, p_{x,j}) k_{dist}(i, j)$$
       where $$p_{x,i}$$ contains label predictions in of pixel i patch x
+
++++
+### MRF - Model for patch-merging
 - inter-connected-component:
     - disencurage same labels if regions are not connected
     - use connected regions of foreground (via predictions) as components
@@ -141,7 +144,6 @@
       for foreground components $$C$$ with pixels $$P_c$$
 
 +++
-
 ### MRF - Parameters
 - every potential term has own weight; prediction term even one for each patch size (5)
 - deviations of gaussian kernel functions (3)
@@ -149,7 +151,6 @@
 - number of iterations for the approximate inference
 
 +++
-
 ### MRF - Performance issues
 - crf inference is sublinear in the number of edges
 - number of edges increase quadratic to the number of pixels
@@ -159,7 +160,6 @@
 - solution: compute inference on downscaled predictions (1/16)
 
 +++
-
 ### MRF - Training by searching parameters
 - use patch predictions of trained cnn on test set
 - random search:
@@ -173,17 +173,14 @@
 <!-- IMAGES -->
 
 +++
-
 ### Examples - Merged patches
 <!-- IMAGES -->
 
 +++
-
 ### Results - CNN performance
 <!-- TABLE -->
 
 +++
-
 ### Results - Merged prediction performance
 <!-- TABLE -->
 
