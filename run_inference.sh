@@ -80,13 +80,13 @@ for roi in $ROIS/*
 do
     if [[ $roi == *_1_*.txt ]]
     then
-        python2 ${SCRIPTS}tools/scale-roi.py $roi $(($LWIDTH/4)) $(($LHEIGHT/4))
+        python2 ${SCRIPTS}tools/scale-roi.py $roi $(($LWIDTH/2)) $(($LHEIGHT/2))
     elif [[ $roi == *_2_*.txt ]]
     then
-        python2 ${SCRIPTS}tools/scale-roi.py $roi $(($MWIDTH/4)) $(($MHEIGHT/4))
+        python2 ${SCRIPTS}tools/scale-roi.py $roi $(($MWIDTH/2)) $(($MHEIGHT/2))
     elif [[ $roi == *_3_*.txt ]]
     then
-        python2 ${SCRIPTS}tools/scale-roi.py $roi $(($SWIDTH/4)) $(($SHEIGHT/4))
+        python2 ${SCRIPTS}tools/scale-roi.py $roi $(($SWIDTH/2)) $(($SHEIGHT/2))
     fi
 done
 
