@@ -1,6 +1,6 @@
 #!/bin/bash
 
-#SBATCH --time=24:00:00
+#SBATCH --time=48:00:00
 #SBATCH --nodes=1
 #SBATCH --ntasks=1
 #SBATCH --cpus-per-task=24
@@ -8,7 +8,7 @@
 #SBATCH --mail-user=thomas.ruprecht@tu-dresden.de
 #SBATCH --mail-type=END,FAIL
 
-export OMP_NUM_THREADS=24
+export OMP_NUM_THREADS=12
 
 
 if [ -z $1 ]
