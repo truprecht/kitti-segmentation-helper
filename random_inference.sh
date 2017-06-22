@@ -64,5 +64,5 @@ srun inference -p "/tmp/input/filelist.txt" -ws ${ws} -wm ${wm} -wl ${wl} -wi ${
 
 for lbl in ${OUT}${CONFIG}/*
 do
-    python $RESCALE $lbl 256 2048 1024 $lbl
+    python $RESCALE $lbl 512 2048 1024 $lbl
 done

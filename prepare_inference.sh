@@ -56,27 +56,27 @@ LHEIGHT=750
 
 touch $LIST
 
-python2 $RSMPL $PATCHES/small $(($SWIDTH/4)) $(($SHEIGHT/4)) $PATCHES
-python2 $RSMPL $PATCHES/medium $(($MWIDTH/4)) $(($MHEIGHT/4)) $PATCHES
-python2 $RSMPL $PATCHES/large $(($LWIDTH/4)) $(($LHEIGHT/4)) $PATCHES
+python2 $RSMPL $PATCHES/small $(($SWIDTH/2)) $(($SHEIGHT/2)) $PATCHES
+python2 $RSMPL $PATCHES/medium $(($MWIDTH/2)) $(($MHEIGHT/2)) $PATCHES
+python2 $RSMPL $PATCHES/large $(($LWIDTH/2)) $(($LHEIGHT/2)) $PATCHES
 
 
 for im in $IMAGES/*
 do
-    python2 $SCLIMG $im 512 256 $im
+    python2 $SCLIMG $im 1024 512 $im
     echo "resized image $im"
 done
 for roi in $ROIS/*
 do
     if [[ $roi == *_1_*.txt ]]
     then
-        python2 $SCLROI $roi $(($LWIDTH/4)) $(($LHEIGHT/4))
+        python2 $SCLROI $roi $(($LWIDTH/2)) $(($LHEIGHT/2))
     elif [[ $roi == *_2_*.txt ]]
     then
-        python2 $SCLROI $roi $(($MWIDTH/4)) $(($MHEIGHT/4))
+        python2 $SCLROI $roi $(($MWIDTH/2)) $(($MHEIGHT/2))
     elif [[ $roi == *_3_*.txt ]]
     then
-        python2 $SCLROI $roi $(($SWIDTH/4)) $(($SHEIGHT/4))
+        python2 $SCLROI $roi $(($SWIDTH/2)) $(($SHEIGHT/2))
     fi
     echo "rescaled roi $roi"
 done
