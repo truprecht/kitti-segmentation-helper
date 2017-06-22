@@ -68,13 +68,13 @@ LHEIGHT=750
 
 touch $LIST
 
-python2 ${SCRIPTS}tools/resample.py $PATCHES/small $(($SWIDTH/4)) $(($SHEIGHT/4)) $PATCHES
-python2 ${SCRIPTS}tools/resample.py $PATCHES/medium $(($MWIDTH/4)) $(($MHEIGHT/4)) $PATCHES
-python2 ${SCRIPTS}tools/resample.py $PATCHES/large $(($LWIDTH/4)) $(($LHEIGHT/4)) $PATCHES
+python2 ${SCRIPTS}tools/resample.py $PATCHES/small $(($SWIDTH/2)) $(($SHEIGHT/2)) $PATCHES
+python2 ${SCRIPTS}tools/resample.py $PATCHES/medium $(($MWIDTH/2)) $(($MHEIGHT/2)) $PATCHES
+python2 ${SCRIPTS}tools/resample.py $PATCHES/large $(($LWIDTH/2)) $(($LHEIGHT/2)) $PATCHES
 
 for im in $IMAGES/*
 do
-    python2 ${SCRIPTS}tools/scale-image.py $im 512 256 $im
+    python2 ${SCRIPTS}tools/scale-image.py $im 1024 512 $im
 done
 for roi in $ROIS/*
 do
@@ -114,5 +114,5 @@ rm -r $PATCHES $IMAGES $ROIS
 
 for lbl in ${OUT}*
 do
-    python2 ${SCRIPTS}tools/scale-labels.py $lbl 256 2048 1024 $lbl
+    python2 ${SCRIPTS}tools/scale-labels.py $lbl 512 2048 1024 $lbl
 done
